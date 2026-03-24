@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background_color">#FAF6EC</color>
+    <color name="cream_color">#F5EDD6</color>
+    <color name="beige_color">#EDE0C4</color>
+    <color name="point_color">#D4793A</color>
+    <color name="button_color">#E8894A</color>
+    <color name="title_color">#5C3D1E</color>
+    <color name="fresh_certification_color">#4A7C59</color>
 </resources>
