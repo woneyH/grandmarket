@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">그랜마켓</string>
+    <string name="intro_message">w</string>
+    <string name="intro_head_message">d</string>
+    <string name="search_bar_message">s</string>
+    <string name="category">c</string>
+
+</resources>
