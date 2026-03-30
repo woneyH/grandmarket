@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">그랜마켓</string>
-    <string name="intro_message">w</string>
-    <string name="intro_head_message">d</string>
-    <string name="search_bar_message">s</string>
-    <string name="category">c</string>
+    <string name="intro_message">안녕하세요, xxx님 👋</string>
+    <string name="intro_head_message">오늘은 뭐 파실래요?</string>
+    <string name="search_bar_message">🔍 상품 검색...</string>
+    <string name="category">📦 카테고리</string>
 
 </resources>

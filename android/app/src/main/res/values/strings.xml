@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">grandmarket_android</string>
+    <string name="intro_message">welcome</string>
+    <string name="intro_head_message">hello ${username}</string>
+    <string name="search_bar_message">search item</string>
+    <string name="category">category</string>
 </resources>
