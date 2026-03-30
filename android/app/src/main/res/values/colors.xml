@@ -8,5 +8,16 @@
     <color name="point_color">#D4793A</color>
     <color name="button_color">#E8894A</color>
     <color name="title_color">#5C3D1E</color>
-    <color name="fresh_certification_color">#4A7C59</color>
+    <color name="orange_main">#E8722A</color>
+    <color name="orange_dark">#C95F1A</color>
+    <color name="orange_light">#F4A05A</color>
+    <color name="cream">#FDF6EC</color>
+    <color name="beige">#F5EDD8</color>
+    <color name="beige_card">#FAF3E4</color>
+    <color name="green_main">#6BBF59</color>
+    <color name="green_dark">#4A9640</color>
+    <color name="text_dark">#3D2B1A</color>
+    <color name="text_mid">#7A5C3D</color>
+    <color name="hint_color">#C4A882</color>
+    <color name="divider_color">#E8D5B0</color>
 </resources>
