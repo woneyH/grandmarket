@@ -1,0 +1,22 @@
+package com.pbl.grandmarket_android
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.pbl.grandmarket_android.databinding.ActivityLoginBinding
+
+
+/**
+ *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
+ */
+class LoginActivity : AppCompatActivity() {
+    private val loginBinding: ActivityLoginBinding by lazy {
+        ActivityLoginBinding.inflate(layoutInflater)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(loginBinding.root)
+
+
+    }
+}
