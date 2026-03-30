@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/bg_btn_kakao.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#E0B800" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+
+    <item>
+        <layer-list>
+            <!-- 버튼 그림자 (아래 레이어) -->
+            <item android:top="4dp">
+                <shape>
+                    <solid android:color="#B89500" />
+                    <corners android:radius="16dp" />
+                </shape>
+            </item>
+            <!-- 버튼 본체 -->
+            <item android:bottom="4dp">
+                <shape>
+                    <solid android:color="#FEE500" />
+                    <corners android:radius="16dp" />
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+
+</selector>
