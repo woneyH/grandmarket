@@ -18,7 +18,7 @@ class LoginActivityTest {
 
     @Test
     fun testLoginScreen_isDisplayed() {
-        onView(withText("로그인")).check(matches(isDisplayed()))
+        onView(withText("카카오로 로그인")).check(matches(isDisplayed()))
 
         onView(withId(R.id.btnKakaoLogin)).check(matches(isDisplayed()))
     }
