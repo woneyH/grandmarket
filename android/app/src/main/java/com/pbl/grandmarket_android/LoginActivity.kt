@@ -1,7 +1,9 @@
 package com.pbl.grandmarket_android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import com.pbl.grandmarket_android.databinding.ActivityLoginBinding
 
 
@@ -16,7 +18,15 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(loginBinding.root)
+        val intent = Intent(this, HomeActivity::class.java)
+        val kakaoLoginBtn = loginBinding.btnKakaoLogin
 
+        loginClickEvent(kakaoLoginBtn, intent)
+    }
 
+    private fun loginClickEvent(loginBtn: AppCompatButton, intent: Intent) {
+        loginBtn.setOnClickListener {
+            startActivity(intent)
+        }
     }
 }
