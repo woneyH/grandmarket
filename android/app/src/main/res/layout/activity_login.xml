@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg_grid">
@@ -27,7 +28,8 @@
             android:paddingStart="28dp"
             android:paddingTop="56dp"
             android:paddingEnd="28dp"
-            android:paddingBottom="40dp">
+            android:paddingBottom="40dp"
+            tools:ignore="MissingConstraints">
 
             <TextView
                 android:id="@+id/tvLogoEmoji"
