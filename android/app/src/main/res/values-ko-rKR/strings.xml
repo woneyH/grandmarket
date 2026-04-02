@@ -4,5 +4,5 @@
     <string name="intro_head_message">오늘은 뭐 파실래요?</string>
     <string name="search_bar_message">🔍 상품 검색...</string>
     <string name="category">📦 카테고리</string>
-
+    <string name="today_detail_items">🌟 오늘의 신선 채소</string>
 </resources>
