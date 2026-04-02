@@ -18,9 +18,16 @@ class LoginActivityTest {
 
     @Test
     fun testLoginScreen_isDisplayed() {
-        onView(withText("카카오로 로그인")).check(matches(isDisplayed()))
+        onView(withText(R.id.intro_message_text)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.btnKakaoLogin)).check(matches(isDisplayed()))
+        onView(withId(R.id.home_search_bar)).check(matches(isDisplayed()))
+
+    }
+
+
+    @Test
+    fun centerContainerTest() {
+
     }
 
 }
