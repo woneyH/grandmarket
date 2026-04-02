@@ -1,6 +1,7 @@
 package com.pbl.grandmarket_android
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,7 @@ class HomeActivity : AppCompatActivity() {
             if(System.currentTimeMillis() - backClickWait >= 1500) {
                 backClickWait = System.currentTimeMillis()
                 Toast.makeText(application, "뒤로가기 버튼을 한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show()
+                Log.d("클릭 이벤트","뒤로가기 버튼 클릭됨")
             }else {
                 finish()
             }
