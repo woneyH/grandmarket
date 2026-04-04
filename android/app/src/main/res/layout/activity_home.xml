@@ -338,7 +338,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_menu_bar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
         android:background="@drawable/home_bottom_bar_stroke"
         app:layout_constraintBottom_toBottomOf="parent">
 
