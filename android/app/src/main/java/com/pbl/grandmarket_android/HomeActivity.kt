@@ -4,23 +4,24 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
-import com.pbl.grandmarket_android.databinding.AcitvityHomeBinding
+import com.pbl.grandmarket_android.databinding.ActivityHomeBinding
 
 
 /**
  * 홈 액티비티 로그인 후 액티비티 전환용
  */
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
     private var backClickWait: Long = 0L
 
-    private val homeBinding: AcitvityHomeBinding by lazy {
-        AcitvityHomeBinding.inflate(layoutInflater)
+    private val homeBinding: ActivityHomeBinding by lazy {
+        ActivityHomeBinding.inflate(layoutInflater)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(homeBinding.root)
+        applyBottomInsets(homeBinding.bottomMenuBar)
+
         onBackPressedDispatcher.addCallback(this,onBackPressCallback)
     }
 
