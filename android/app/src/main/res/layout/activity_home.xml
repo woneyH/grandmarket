@@ -6,333 +6,13 @@
     android:layout_height="match_parent"
     android:background="@color/background_color">
 
-    <!-- NestedScrollView는 하나의 자식만 가져야 하므로 내부에 LinearLayout을 추가함 -->
-    <androidx.core.widget.NestedScrollView
+    <!-- Fragment가 표시될 컨테이너 -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@id/bottom_menu_bar"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/top_bar"
-                android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:background="@drawable/main_top_bar">
-
-                <TextView
-                    android:id="@+id/intro_message_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/intro_message"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.325" />
-
-                <TextView
-                    android:id="@+id/greet_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/intro_head_message"
-                    android:textColor="#ffffff"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@id/intro_message_text"
-                    app:layout_constraintTop_toBottomOf="@id/intro_message_text" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/home_search_bar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/home_search_bar"
-                    android:text="@string/search_bar_message"
-                    android:textColor="@color/home_search_bar_text"
-                    app:layout_constraintStart_toStartOf="@id/greet_user_name"
-                    app:layout_constraintTop_toBottomOf="@id/greet_user_name"
-                    app:layout_constraintWidth_percent="0.85" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- 카테고리 섹션: 높이를 wrap_content로 변경 -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/category_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background_color"
-                android:paddingBottom="20dp">
-
-                <TextView
-                    android:id="@+id/category_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="15dp"
-                    android:text="@string/category"
-                    android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/category_food1"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/home_category_box"
-                    app:layout_constraintEnd_toStartOf="@id/category_food2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/category_text" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/category_food2"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/home_category_box"
-                    app:layout_constraintEnd_toStartOf="@id/category_food3"
-                    app:layout_constraintStart_toEndOf="@id/category_food1"
-                    app:layout_constraintTop_toBottomOf="@id/category_text" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/category_food3"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/home_category_box"
-                    app:layout_constraintEnd_toStartOf="@id/category_food4"
-                    app:layout_constraintStart_toEndOf="@id/category_food2"
-                    app:layout_constraintTop_toBottomOf="@id/category_text" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/category_food4"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/home_category_box"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/category_food3"
-                    app:layout_constraintTop_toBottomOf="@id/category_text" />
-
-                <TextView
-                    android:id="@+id/today_detail_items"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/today_detail_items"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.08"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/category_food1" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <!-- 아이템 목록 섹션: 높이 wrap_content -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/item_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background_color"
-                android:padding="12dp">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/item_card_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toStartOf="@+id/item_card_2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            app:cardBackgroundColor="#F5EDD8"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🥬"
-                                android:textSize="50sp" />
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="시금치 한 단"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="1,800원"
-                            android:textColor="@color/point_color"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@drawable/home_sell_upload_btn"
-                            android:text="✅ 판매 등록"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/item_card_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/item_card_1"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            app:cardBackgroundColor="#F5EDD8"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🥬"
-                                android:textSize="50sp" />
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="시금치 한 단"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="1,800원"
-                            android:textColor="@color/point_color"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@drawable/home_sell_upload_btn"
-                            android:text="✅ 판매 등록"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/item_card_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:layout_constraintEnd_toStartOf="@+id/item_card_2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/item_card_1">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="120dp"
-                            app:cardBackgroundColor="#F5EDD8"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="0dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="🥬"
-                                android:textSize="50sp" />
-                        </androidx.cardview.widget.CardView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
-                            android:text="시금치 한 단"
-                            android:textColor="@color/text_dark"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="1,800원"
-                            android:textColor="@color/point_color"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatButton
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginTop="12dp"
-                            android:background="@drawable/home_sell_upload_btn"
-                            android:text="✅ 판매 등록"
-                            android:textColor="@color/white"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- 하단 메뉴 바 -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -350,19 +30,24 @@
             android:weightSum="3">
 
             <LinearLayout
+                android:id="@+id/btn_home"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/icon_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🏠"
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/text_home"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="홈"
@@ -372,19 +57,24 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btn_chat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/icon_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="💬"
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/text_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="채팅"
@@ -393,19 +83,24 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/btn_my_info"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/icon_my_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="👤"
                     android:textSize="24sp" />
 
                 <TextView
+                    android:id="@+id/text_my_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="나의 정보"
