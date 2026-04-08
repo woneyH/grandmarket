@@ -11,7 +11,7 @@ import com.pbl.grandmarket_android.databinding.ActivityLoginBinding
 /**
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
@@ -19,6 +19,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(loginBinding.root)
+        applyBottomInsets(loginBinding.root)
+
         val intent = Intent(this, HomeActivity::class.java)
         val kakaoLoginBtn = loginBinding.btnKakaoLogin
 
