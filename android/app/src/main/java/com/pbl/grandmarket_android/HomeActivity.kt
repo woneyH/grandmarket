@@ -48,7 +48,7 @@ class HomeActivity : BaseActivity() {
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
+            .replace(R.id.fragment_container, fragment, fragment::class.java.simpleName)
             .commit()
     }
 
@@ -62,13 +62,12 @@ class HomeActivity : BaseActivity() {
         homeBinding.textMyInfo.setTextColor(if (index == 2) activeColor else defaultColor)
         
         // 텍스트 스타일 변경 (Bold 여부)
-        homeBinding.textHome.paint.isFakeBoldText = index == 0
-        homeBinding.textChat.paint.isFakeBoldText = index == 1
-        homeBinding.textMyInfo.paint.isFakeBoldText = index == 2
-        
-        homeBinding.textHome.invalidate()
-        homeBinding.textChat.invalidate()
-        homeBinding.textMyInfo.invalidate()
+        homeBinding.textHome.setTypeface(null, if(index==0)
+        android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+        homeBinding.textChat.setTypeface(null, if(index==1)
+            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+        homeBinding.textMyInfo.setTypeface(null, if(index==2)
+            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
     }
 
     private val onBackPressCallback = object : OnBackPressedCallback(true) {
