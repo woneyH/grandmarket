@@ -14,9 +14,10 @@ abstract class BaseActivity: AppCompatActivity() {
     }
 
     protected fun applyBottomInsets(view: View) {
+        val initialPaddingBottom = view.paddingBottom
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, navBars.bottom)
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, navBars.bottom+initialPaddingBottom)
             insets
         }
     }
