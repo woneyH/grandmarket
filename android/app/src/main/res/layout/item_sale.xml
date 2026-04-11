@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="9dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#F0D9B5"
+    app:strokeWidth="1.5dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <!-- ── 상품 이미지 ── -->
+        <ImageView
+            android:id="@+id/ivProductImage"
+            android:layout_width="75dp"
+            android:layout_height="70dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/item_list_image_placeholder"
+            android:background="#F5F0DC"
+            android:contentDescription="상품 이미지" />
+
+        <!-- ── 상품 정보 ── -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="7dp"
+            android:orientation="vertical"
+            android:paddingStart="10dp">
+
+            <!-- 카테고리 태그 + 상태 dot + 상태 텍스트 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+
+                <TextView
+                    android:id="@+id/tvCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="채소"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="#C05E00"
+                    android:background="@drawable/bg_item_list_veg" />
+
+                <View
+                    android:id="@+id/viewStatusDot"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_marginStart="7dp"
+                    android:background="@drawable/bg_item_list_circle"
+                    android:backgroundTint="#52B788" />
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:text="판매중"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:textColor="#2D6A4F" />
+
+            </LinearLayout>
+
+            <!-- 상품명 -->
+            <TextView
+                android:id="@+id/tvProductName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="국내산 알배기 배추 1포기"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:textColor="#1A1A1A"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginBottom="4dp" />
+
+            <!-- 가격 -->
+            <TextView
+                android:id="@+id/tvPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3,500원"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#E8821A"
+                android:layout_marginBottom="5dp" />
+
+            <!-- 재고 · 날짜 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvStock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="재고 32개"
+                    android:textSize="10sp"
+                    android:textColor="#BBBBA8" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:background="#D4C9B0" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1일 전"
+                    android:textSize="10sp"
+                    android:textColor="#BBBBA8" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- ── 더보기 버튼 ── -->
+        <ImageButton
+            android:id="@+id/btnMore"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="top"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/item_list_more_vert"
+            android:contentDescription="더보기" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
