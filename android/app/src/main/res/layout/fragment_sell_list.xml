@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5EFE0">
+
+    <!-- ════════════════════════════
+         AppBar: 주황 헤더
+    ════════════════════════════ -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E8821A"
+        app:elevation="0dp">
+
+        <!-- 타이틀 + 상품 수 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="40dp"
+            android:paddingBottom="6dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내 판매 목록"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tvItemCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="등록된 상품 0개"
+                android:textSize="12sp"
+                android:textColor="#FFD4A8" />
+
+        </LinearLayout>
+
+        <!-- ── 필터 탭 (RadioGroup 스타일) ── -->
+        <!--
+            Chip 커스텀 스타일 없이 RadioGroup + RadioButton으로 구현.
+            선택 상태는 코드에서 setOnCheckedChangeListener로 처리.
+        -->
+        <RadioGroup
+            android:id="@+id/rgFilter"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:orientation="horizontal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:gravity="center_vertical"
+            android:checkedButton="@+id/rbAll">
+
+            <RadioButton
+                android:id="@+id/rbAll"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:text="전체"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:button="@null"
+                android:background="@drawable/bg_item_list_tap_selector"
+                android:textColor="@drawable/bg_item_list_text_selector"
+                android:checked="true" />
+
+            <RadioButton
+                android:id="@+id/rbOnSale"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:text="판매중"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:button="@null"
+                android:background="@drawable/bg_item_list_tap_selector"
+                android:textColor="@drawable/bg_item_list_text_selector" />
+
+            <RadioButton
+                android:id="@+id/rbReserved"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginEnd="6dp"
+                android:text="예약중"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:button="@null"
+                android:background="@drawable/bg_item_list_tap_selector"
+                android:textColor="@drawable/bg_item_list_text_selector" />
+
+            <RadioButton
+                android:id="@+id/rbSoldOut"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:text="완료"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:button="@null"
+                android:background="@drawable/bg_item_list_tap_selector"
+                android:textColor="@drawable/bg_item_list_text_selector" />
+
+        </RadioGroup>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- ════════════════════════════
+         판매 목록 RecyclerView
+    ════════════════════════════ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvSalesList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="10dp"
+        android:paddingBottom="80dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- ════════════════════════════
+         빈 목록 안내
+    ════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📦"
+            android:textSize="52sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="등록된 판매 상품이 없어요"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#BBBBA8" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="아래 버튼을 눌러 상품을 등록해보세요"
+            android:textSize="13sp"
+            android:textColor="#D4C9B0" />
+
+    </LinearLayout>
+
+    <!-- ════════════════════════════
+         상품 등록 FAB
+    ════════════════════════════ -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddProduct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="30dp"
+        android:text="상품 등록"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:textSize="13sp"
+        app:icon="@drawable/item_list_add"
+        app:iconTint="#FFFFFF"
+        app:backgroundTint="#E8821A"
+        app:cornerRadius="24dp"
+        app:elevation="6dp" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
