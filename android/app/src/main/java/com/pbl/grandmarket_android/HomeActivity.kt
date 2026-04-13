@@ -17,6 +17,7 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("gpt", "HomeActivity onCreate 진입") // g: 진입 로그
         setContentView(homeBinding.root)
         applyBottomInsets(homeBinding.bottomMenuBar)
 
