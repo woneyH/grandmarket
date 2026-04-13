@@ -1,6 +1,13 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+//kakao native app key properties 불러오기
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
+val kakaoNativeAppKey = properties.getProperty("KAKAO_NATIVE_APP_KEY") ?: ""
 
 android {
     namespace = "com.pbl.grandmarket_android"
@@ -18,6 +25,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //manifest와 코틀린 코드에서 쓸 수 있게 설정함.
+        manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoNativeAppKey
+        buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"${kakaoNativeAppKey}\"")
     }
 
     buildTypes {
@@ -34,22 +45,33 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    viewBinding.enable = true
+    buildFeatures{
+        viewBinding = true
+        buildConfig = true
+    }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
+
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation("androidx.fragment:fragment-ktx:1.6.2")
-    implementation("androidx.activity:activity-ktx:1.8.2")
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity.ktx)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+
+//    //kakao 로그인 의존성 추가
+//    implementation(libs.kakao.user)
+//    // Retrofit2 & Gson
+//    implementation(libs.retrofit.core)
+//    implementation(libs.retrofit.converter.gson)
 }
