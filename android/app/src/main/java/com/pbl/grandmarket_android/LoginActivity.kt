@@ -23,6 +23,7 @@ import retrofit2.Response
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
+    private val serverIp = "http://192.168.0.19:8080"
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
@@ -30,7 +31,7 @@ class LoginActivity : BaseActivity() {
     // g: Retrofit 인스턴스 생성 (BaseUrl은 추후 변경 가능)
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl("http://192.168.0.19:8080") // gpt: 서버 주소
+            .baseUrl(serverIp) // g: 서버 주소
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
@@ -48,10 +49,13 @@ class LoginActivity : BaseActivity() {
         val intent = Intent(this, HomeActivity::class.java)
         val kakaoLoginBtn = loginBinding.btnKakaoLogin
 
-        loginClickEvent(kakaoLoginBtn, intent)
+        //현재 다이렉트 로그인
+        loginClickEvent(kakaoLoginBtn, intent, true)
 
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
+
+
 
     // g: 카카오 로그인 버튼 클릭 시 동작
     private fun loginClickEvent(loginBtn: AppCompatButton, intent: Intent) {
@@ -98,6 +102,22 @@ class LoginActivity : BaseActivity() {
                         }
                     })
                 }
+            }
+        }
+    }
+
+
+    /**
+     *  2026/04/14
+     *  다이렉트 로그인 (카카오 로그인 무시함)
+     *  @param directBoolean : 다이렉트 로그인 여부
+     */
+    private fun loginClickEvent(loginBtn: AppCompatButton, intent: Intent, directBoolean: Boolean) {
+        if (directBoolean) {
+            loginBtn.setOnClickListener {
+                startActivity(intent)
+                Toast.makeText(this@LoginActivity, "다이렉트", Toast.LENGTH_SHORT)
+                finish()
             }
         }
     }
