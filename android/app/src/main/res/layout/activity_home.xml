@@ -19,24 +19,24 @@
         android:id="@+id/bottom_menu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="70dp"
         android:background="@drawable/home_bottom_bar_stroke"
+        android:minHeight="70dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="4">
 
             <LinearLayout
                 android:id="@+id/btn_home"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
@@ -56,14 +56,41 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+
+            <LinearLayout
+                android:id="@+id/btn_my_sell_info"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/icon_my_sell_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📋"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/text_my_sell_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="판매목록"
+                    android:textColor="@color/text_mid"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/btn_chat"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
@@ -87,9 +114,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView

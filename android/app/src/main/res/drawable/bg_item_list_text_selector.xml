@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/filter_tab_text_selector.xml -->
+<!-- ※ res/color/ 폴더에 넣어도 동일하게 동작 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 선택됐을 때: 주황 -->
+    <item android:state_checked="true"
+        android:color="#E8821A" />
+
+    <!-- 기본: 반투명 흰색 -->
+    <item android:color="#CCFFFFFF" />
+
+</selector>

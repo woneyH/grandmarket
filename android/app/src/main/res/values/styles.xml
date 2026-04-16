@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 판매목록 필터 칩 공통 스타일 -->
+    <style name="SaleFilterChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="chipBackgroundColor">@color/chip_bg_selector</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="chipStrokeColor">#80FFFFFF</item>
+        <item name="chipStrokeWidth">1.5dp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="chipMinHeight">32dp</item>
+    </style>
+
+    <!-- 원형 이미지 ShapeAppearance -->
+    <style name="CircleShape" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- 상품 이미지 radius 10dp -->
+    <style name="RoundedCorner10" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+</resources>
