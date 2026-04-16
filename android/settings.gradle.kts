@@ -27,3 +27,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "grandmarket_android"
 include(":app")
+
+
