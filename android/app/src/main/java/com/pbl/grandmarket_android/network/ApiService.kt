@@ -1,7 +1,6 @@
 
 package com.pbl.grandmarket_android.network
 
-import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -14,5 +13,5 @@ data class KakaoLoginResponse(val token: String, val userId: Long)
 // g: 카카오 로그인 API 인터페이스
 interface ApiService {
     @POST("/api/members/login/kakao")
-    fun kakaoLogin(@Body request: KakaoLoginRequest): Call<KakaoLoginResponse>
+    suspend fun kakaoLogin(@Body request: KakaoLoginRequest): retrofit2.Response<KakaoLoginResponse>
 }
