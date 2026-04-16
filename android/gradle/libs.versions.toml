@@ -37,4 +37,3 @@ retrofit-converter-gson = { group = "com.squareup.retrofit2", name = "converter-
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-

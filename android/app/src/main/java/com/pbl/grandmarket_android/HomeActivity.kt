@@ -17,7 +17,6 @@ class HomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("액티비티 전환", "HomeActivity onCreate 진입") // g: 진입 로그
         setContentView(homeBinding.root)
         applyBottomInsets(homeBinding.bottomMenuBar)
 
@@ -37,17 +36,13 @@ class HomeActivity : BaseActivity() {
             replaceFragment(HomeFragment())
             updateBottomMenuUI(0)
         }
-        homeBinding.btnMySellInfo.setOnClickListener {
-            replaceFragment(SellListFragment())
-            updateBottomMenuUI(1)
-        }
         homeBinding.btnChat.setOnClickListener {
             replaceFragment(ChatFragment())
-            updateBottomMenuUI(2)
+            updateBottomMenuUI(1)
         }
         homeBinding.btnMyInfo.setOnClickListener {
             replaceFragment(MyInfoFragment())
-            updateBottomMenuUI(3)
+            updateBottomMenuUI(2)
         }
     }
 
@@ -63,27 +58,16 @@ class HomeActivity : BaseActivity() {
         val activeColor = ContextCompat.getColor(this, R.color.orange_main)
 
         homeBinding.textHome.setTextColor(if (index == 0) activeColor else defaultColor)
-        homeBinding.textMySellInfo.setTextColor(if (index == 1) activeColor else defaultColor)
-        homeBinding.textChat.setTextColor(if (index == 2) activeColor else defaultColor)
-        homeBinding.textMyInfo.setTextColor(if (index == 3) activeColor else defaultColor)
-
+        homeBinding.textChat.setTextColor(if (index == 1) activeColor else defaultColor)
+        homeBinding.textMyInfo.setTextColor(if (index == 2) activeColor else defaultColor)
+        
         // 텍스트 스타일 변경 (Bold 여부)
-        homeBinding.textHome.setTypeface(
-            null, if (index == 0)
-                android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL
-        )
-        homeBinding.textMySellInfo.setTypeface(
-            null, if (index == 1)
-                android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL
-        )
-        homeBinding.textChat.setTypeface(
-            null, if (index == 2)
-                android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL
-        )
-        homeBinding.textMyInfo.setTypeface(
-            null, if (index == 3)
-                android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL
-        )
+        homeBinding.textHome.setTypeface(null, if(index==0)
+        android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+        homeBinding.textChat.setTypeface(null, if(index==1)
+            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+        homeBinding.textMyInfo.setTypeface(null, if(index==2)
+            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
     }
 
     private val onBackPressCallback = object : OnBackPressedCallback(true) {
