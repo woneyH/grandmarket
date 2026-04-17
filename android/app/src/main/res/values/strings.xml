@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">Grand Market</string>
-    <string name="intro_message">안녕하세요, xxx님 👋</string>
-    <string name="intro_head_message">오늘은 뭐 파실래요?</string>
-    <string name="search_bar_message">🔍 상품 검색...</string>
-    <string name="category">📦 카테고리</string>
-    <string name="today_detail_items">🌟 오늘의 신선 채소</string>
+    <string name="intro_message">Hi 👋</string>
+    <string name="intro_head_message">today sell</string>
+    <string name="search_bar_message">search</string>
+    <string name="category">category</string>
+    <string name="today_detail_items">today food</string>
 </resources>
