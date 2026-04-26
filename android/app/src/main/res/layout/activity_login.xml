@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/login_bg_grid">
 
-    <!-- ───────────────────────────────────────────── -->
-    <!--  상단 오렌지 헤더                              -->
-    <!-- ───────────────────────────────────────────── -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/headerCard"
         android:layout_width="0dp"
@@ -68,9 +64,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- ───────────────────────────────────────────── -->
-    <!--  로그인 카드                                   -->
-    <!-- ───────────────────────────────────────────── -->
+    <!--로그인 전체 컨테이너-->
     <androidx.cardview.widget.CardView
         android:id="@+id/loginCard"
         android:layout_width="0dp"
@@ -129,10 +123,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvCardDesc" />
 
-            <!-- ─────────────────────────────────────────── -->
-            <!--  소셜 로그인 버튼 영역 (LinearLayout)         -->
-            <!--  새 로그인 방식 추가 시 Button 하나만 추가하면 됨 -->
-            <!-- ─────────────────────────────────────────── -->
+            <!---로그인 버튼 영역 컨테이너 -->
             <LinearLayout
                 android:id="@+id/layoutSocialButtons"
                 android:layout_width="0dp"
@@ -143,27 +134,29 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dividerTop">
 
-                <!--
-                =====================================================
-                  ✅ 로그인 버튼 추가 방법
-                  아래 카카오 버튼을 복사 후 id/background/text만 변경
-                  예: btnNaverLogin / bg_btn_naver / "네이버로 로그인"
-                =====================================================
-                -->
 
                 <!-- 카카오 로그인 -->
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btnKakaoLogin"
+                    android:id="@+id/btnSellerLogin"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:background="@drawable/login_bg_btn_kakao"
-                    android:text="카카오로 로그인"
+                    android:background="@drawable/login_buyer_bg_btn_kakao"
+                    android:text="🏪 판매자로 로그인하기"
+                    android:textColor="#3C1E1E"
+                    android:textSize="15sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnBuyerLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/login_seller_bg_btn_kakao"
+                    android:text="🛒  구매자로 로그인하기"
                     android:textColor="#3C1E1E"
                     android:textSize="15sp" />
 
             </LinearLayout>
 
-            <!-- 구분선 -->
             <View
                 android:id="@+id/dividerBottom"
                 android:layout_width="0dp"
