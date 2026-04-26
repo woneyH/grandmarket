@@ -12,16 +12,15 @@
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             android:background="@drawable/main_top_bar">
 
             <TextView
-                android:id="@+id/intro_message_text"
+                android:id="@+id/tvBuyerIntro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/intro_message"
+                android:text="안녕하세요, 구매자님 👋"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -32,42 +31,40 @@
                 app:layout_constraintVertical_bias="0.325" />
 
             <TextView
-                android:id="@+id/greet_user_name"
+                android:id="@+id/tvBuyerTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/intro_head_message"
+                android:text="오늘의 신선 식자재를 찾아보세요"
                 android:textColor="#ffffff"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/intro_message_text"
-                app:layout_constraintTop_toBottomOf="@id/intro_message_text" />
+                app:layout_constraintStart_toStartOf="@id/tvBuyerIntro"
+                app:layout_constraintTop_toBottomOf="@id/tvBuyerIntro" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/home_search_bar"
+                android:id="@+id/btnBuyerSearch"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/home_search_bar"
-                android:text="@string/search_bar_message"
+                android:text="🔍 상품 검색..."
                 android:textColor="@color/home_search_bar_text"
-                app:layout_constraintStart_toStartOf="@id/greet_user_name"
-                app:layout_constraintTop_toBottomOf="@id/greet_user_name"
+                app:layout_constraintStart_toStartOf="@id/tvBuyerTitle"
+                app:layout_constraintTop_toBottomOf="@id/tvBuyerTitle"
                 app:layout_constraintWidth_percent="0.85" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--삭지재 등록 방법 설명 텍스트-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
             android:paddingTop="24dp"
             android:paddingBottom="10dp"
-            android:text="식자재 등록 방법을 선택하세요"
+            android:text="구매자 빠른 메뉴"
             android:textColor="#A8A090"
             android:textSize="13sp"
             android:textStyle="bold" />
 
-        <!-- 등록 버튼 컨테이너 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -76,15 +73,10 @@
             android:paddingEnd="14dp"
             android:paddingBottom="24dp">
 
-            <!-- ── 버튼 1: 검색해서 식자재 등록하기 ── -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnSearchRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
@@ -98,16 +90,14 @@
                     android:orientation="horizontal"
                     android:padding="20dp">
 
-                    <!-- 아이콘 박스 -->
                     <TextView
                         android:layout_width="52dp"
                         android:layout_height="52dp"
                         android:background="@drawable/bg_menu_icon_orange"
                         android:gravity="center"
-                        android:text="🔍"
+                        android:text="🛍"
                         android:textSize="26sp" />
 
-                    <!-- 텍스트 -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -119,7 +109,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="검색해서 등록하기"
+                            android:text="인기 식자재 둘러보기"
                             android:textColor="#1A1A1A"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -128,33 +118,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="식자재 이름으로 검색 후 빠르게 등록"
+                            android:text="많이 찾는 식자재를 빠르게 확인"
                             android:textColor="#BBBBA8"
                             android:textSize="12sp" />
-
                     </LinearLayout>
-
-                    <!-- 화살표 -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="›"
-                        android:textColor="#E8821A"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- 버튼 : 카메라로 식자재 등록하기 -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/btnCameraRegister"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
@@ -168,16 +141,14 @@
                     android:orientation="horizontal"
                     android:padding="20dp">
 
-                    <!-- 아이콘 박스 -->
                     <TextView
                         android:layout_width="52dp"
                         android:layout_height="52dp"
                         android:background="@drawable/bg_menu_icon_orange"
                         android:gravity="center"
-                        android:text="📷"
+                        android:text="🚚"
                         android:textSize="26sp" />
 
-                    <!-- 텍스트 -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -189,7 +160,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="카메라로 등록하기"
+                            android:text="최근 주문/배송 보기"
                             android:textColor="#1A1A1A"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -198,21 +169,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="사진을 찍어 식자재를 빠르게 등록"
+                            android:text="주문 상태와 배송 진행을 확인"
                             android:textColor="#BBBBA8"
                             android:textSize="12sp" />
-
                     </LinearLayout>
-
-                    <!-- 화살표 -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="›"
-                        android:textColor="#E8821A"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pbl.grandmarket_android.UserRole
 import com.pbl.grandmarket_android.network.KakaoLoginResponse
 import com.pbl.grandmarket_android.util.Resource
 import com.pbl.grandmarket_android.repository.AuthRepository
@@ -13,13 +14,16 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
     private val _loginStatus = MutableLiveData<Resource<KakaoLoginResponse>>()
     val loginStatus: LiveData<Resource<KakaoLoginResponse>> = _loginStatus
 
+    private val _loginRole = MutableLiveData<UserRole>()
+    val loginRole: LiveData<UserRole> = _loginRole
 
-    fun performKakaoLogin(accessToken: String) {
+    fun performKakaoLogin(accessToken: String, role: UserRole) {
+        _loginRole.value = role
         _loginStatus.value = Resource.Loading
 
         viewModelScope.launch {
             try {
-                val response = repository.kakaoLogin(accessToken)
+                val response = repository.kakaoLogin(accessToken, role)
 
                 if(response.isSuccessful) {
                     response.body()?.let {

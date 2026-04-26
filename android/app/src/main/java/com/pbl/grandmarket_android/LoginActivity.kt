@@ -19,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
-    private val IS_SKIP_KAKAO_LOGIN = false
+    private val IS_SKIP_KAKAO_LOGIN = true
     private val serverIp = "http://192.168.0.19:8080"
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
@@ -53,7 +53,9 @@ class LoginActivity : BaseActivity() {
                 is Resource.Success -> {
                     Log.d("LoginActivity", "로그인 성공: ${resource.data}")
                     Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-                    moveToHome()
+                    val role = viewModel.loginRole.value ?: UserRole.BUYER
+                    UserSession.saveRole(this, role)
+                    moveToHome(role)
                 }
                 is Resource.Error<*> -> {
                     val errorMessage = resource.data?.toString()?:"로그인 실패"
@@ -66,29 +68,49 @@ class LoginActivity : BaseActivity() {
 
     //홈 엑티비티와 UI 원할한 업데이트를 위해 카카오 로그인 생략 추가함.
     private fun setupListeners(skipKakaoLogin: Boolean) {
-        val kakaoLoginBtn = loginBinding.btnKakaoLogin
+        val sellerBtn = loginBinding.btnSellerLogin
+        val buyerBtn = loginBinding.btnBuyerLogin
 
         // 카카오 로그인 클릭 이벤트
         if(skipKakaoLogin) {
-            kakaoLoginBtn.setOnClickListener {
-                moveToHome()
+            // 테스트용 스킵 - 둘 다 홈으로 이동
+            sellerBtn.setOnClickListener {
+                UserSession.saveRole(this, UserRole.SELLER)
+                moveToHome(UserRole.SELLER)
+            }
+            buyerBtn.setOnClickListener  {
+                UserSession.saveRole(this, UserRole.BUYER)
+                moveToHome(UserRole.BUYER)
             }
         }else {
-            kakaoLoginBtn.setOnClickListener {
+            sellerBtn.setOnClickListener {
                 UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
                     if (error != null) {
                         Log.e("kakao login", "카카오 로그인 실패: $error")
                     } else if (token != null) {
                         Log.d("kakao login", "카카오 로그인 성공")
-                        viewModel.performKakaoLogin(token.accessToken)
+                        viewModel.performKakaoLogin(token.accessToken, UserRole.SELLER)
+                    }
+                }
+            }
+
+            buyerBtn.setOnClickListener {
+                UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
+                    if (error != null) {
+                        Log.e("kakao login", "카카오 로그인 실패: $error")
+                    } else if (token != null) {
+                        Log.d("kakao login", "카카오 로그인 성공")
+                        viewModel.performKakaoLogin(token.accessToken, UserRole.BUYER)
                     }
                 }
             }
         }
+
     }
 
-    private fun moveToHome() {
+    private fun moveToHome(role: UserRole) {
         val intent = Intent(this, HomeActivity::class.java)
+        intent.putExtra(HomeActivity.EXTRA_USER_ROLE, role.value)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
