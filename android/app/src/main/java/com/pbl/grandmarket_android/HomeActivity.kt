@@ -19,6 +19,10 @@ class HomeActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(homeBinding.root)
         applyBottomInsets(homeBinding.bottomMenuBar)
+        val roleFromIntent = intent.getStringExtra(EXTRA_USER_ROLE)
+        if (roleFromIntent != null) {
+            UserSession.saveRole(this, UserRole.from(roleFromIntent))
+        }
 
         // 초기 화면 설정
         if (savedInstanceState == null) {
@@ -87,5 +91,9 @@ class HomeActivity : BaseActivity() {
                 finish()
             }
         }
+    }
+
+    companion object {
+        const val EXTRA_USER_ROLE = "extra_user_role"
     }
 }
