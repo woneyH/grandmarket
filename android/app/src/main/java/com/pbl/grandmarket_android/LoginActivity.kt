@@ -73,7 +73,6 @@ class LoginActivity : BaseActivity() {
 
         // 카카오 로그인 클릭 이벤트
         if(skipKakaoLogin) {
-            // 테스트용 스킵 - 둘 다 홈으로 이동
             sellerBtn.setOnClickListener {
                 UserSession.saveRole(this, UserRole.SELLER)
                 moveToHome(UserRole.SELLER)

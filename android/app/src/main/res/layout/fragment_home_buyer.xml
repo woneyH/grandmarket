@@ -95,7 +95,7 @@
                         android:layout_height="52dp"
                         android:background="@drawable/bg_menu_icon_orange"
                         android:gravity="center"
-                        android:text="🛍"
+                        android:text="🔍"
                         android:textSize="26sp" />
 
                     <LinearLayout
@@ -109,7 +109,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="인기 식자재 둘러보기"
+                            android:text="검색으로 식자재 찾기"
                             android:textColor="#1A1A1A"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -141,12 +141,13 @@
                     android:orientation="horizontal"
                     android:padding="20dp">
 
+
                     <TextView
                         android:layout_width="52dp"
                         android:layout_height="52dp"
                         android:background="@drawable/bg_menu_icon_orange"
                         android:gravity="center"
-                        android:text="🚚"
+                        android:text="📍"
                         android:textSize="26sp" />
 
                     <LinearLayout
@@ -160,7 +161,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="최근 주문/배송 보기"
+                            android:text="내 주변 점포 찾기"
                             android:textColor="#1A1A1A"
                             android:textSize="16sp"
                             android:textStyle="bold" />

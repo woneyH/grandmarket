@@ -5,10 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.pbl.grandmarket_android.databinding.FragmentChatBinding
+import com.pbl.grandmarket_android.databinding.FragmentFoodPriceBinding
 
-class ChatFragment : Fragment() {
-    private var _binding: FragmentChatBinding? = null
+class FoodPriceFragment : Fragment() {
+    private var _binding: FragmentFoodPriceBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -16,7 +16,7 @@ class ChatFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentChatBinding.inflate(inflater, container, false)
+        _binding = FragmentFoodPriceBinding.inflate(inflater, container, false)
         return binding.root
     }
 
