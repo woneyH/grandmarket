@@ -5,14 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pbl.grandmarket_android.UserRole
-import com.pbl.grandmarket_android.network.KakaoLoginResponse
 import com.pbl.grandmarket_android.util.Resource
 import com.pbl.grandmarket_android.repository.AuthRepository
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
-    private val _loginStatus = MutableLiveData<Resource<KakaoLoginResponse>>()
-    val loginStatus: LiveData<Resource<KakaoLoginResponse>> = _loginStatus
+    private val _loginStatus = MutableLiveData<Resource<String>>()
+    val loginStatus: LiveData<Resource<String>> = _loginStatus
 
     private val _loginRole = MutableLiveData<UserRole>()
     val loginRole: LiveData<UserRole> = _loginRole
@@ -24,12 +23,12 @@ class LoginViewModel(private val repository: AuthRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repository.kakaoLogin(accessToken, role)
-
                 if(response.isSuccessful) {
-                    response.body()?.let {
-                        _loginStatus.value = Resource.Success(it)
-                    } ?: run {
-                        _loginStatus.value = Resource.Error("응답 데이터가 비어있습니다.")
+                    val jwt = response.body()
+                    if(!jwt.isNullOrEmpty()) {
+                        _loginStatus.value = Resource.Success(jwt)
+                    }else {
+                        _loginStatus.value = Resource.Error("JWT 응답이 비어있습니다.")
                     }
                 }else {
                     _loginStatus.value = Resource.Error("로그인 실패: ${response.code()}")
