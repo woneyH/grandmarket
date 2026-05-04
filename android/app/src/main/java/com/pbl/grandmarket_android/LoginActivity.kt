@@ -14,6 +14,7 @@ import com.pbl.grandmarket_android.view_model.LoginViewModel
 import com.pbl.grandmarket_android.view_model.LoginViewModelFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 /**
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
@@ -29,6 +30,7 @@ class LoginActivity : BaseActivity() {
     private val viewModel: LoginViewModel by viewModels {
         val retrofit = Retrofit.Builder()
             .baseUrl(serverIp)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val apiService = retrofit.create(ApiService::class.java)
