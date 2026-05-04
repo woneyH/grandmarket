@@ -18,4 +18,11 @@ object UserSession {
             .getString(KEY_USER_ROLE, null)
         return UserRole.from(roleValue)
     }
+
+    fun clear(context: Context) {
+        context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
+            .edit()
+            .clear()
+            .apply()
+    }
 }
