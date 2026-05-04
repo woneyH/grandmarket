@@ -71,6 +71,7 @@ dependencies {
 
     //kakao 로그인 의존성 추가
     implementation(libs.kakao.user)
+    implementation(libs.kakao.map)
     // Retrofit2 & Gson
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converter.gson)
