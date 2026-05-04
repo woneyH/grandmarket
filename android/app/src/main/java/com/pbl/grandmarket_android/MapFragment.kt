@@ -69,7 +69,7 @@ class MapFragment : Fragment() {
                 }
 
                 override fun getPosition(): LatLng {
-                    return LatLng.from(37.5665, 126.9780) // 서울시청
+                    return LatLng.from(35.1537, 128.1022) // 경상국립대 가좌
                 }
 
                 override fun getZoomLevel(): Int = 15

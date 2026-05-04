@@ -20,7 +20,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
-    private val IS_SKIP_KAKAO_LOGIN = true
+    private val IS_SKIP_KAKAO_LOGIN = false
     private val serverIp = "http://192.168.0.19:8080"
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
