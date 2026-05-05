@@ -80,4 +80,7 @@ dependencies {
     //firebase 의존성 추가함
     implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    //Google Location 의존성 추가
+    implementation("com.google.android.gms:play-services-location:21.2.0")
 }
