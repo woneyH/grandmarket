@@ -22,6 +22,8 @@ dependencyResolutionManagement {
 
         //kakao login server
         maven { url = uri("https://devrepo.kakao.com/nexus/content/groups/public/") }
+        //kakao map server
+        maven { url = uri("https://devrepo.kakao.com/nexus/repository/kakaomap-releases/") }
     }
 }
 

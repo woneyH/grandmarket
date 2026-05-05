@@ -10,11 +10,9 @@ data class KakaoLoginRequest(
     val role: String
 )
 
-// 카카오 로그인 응답 데이터 모델
-data class KakaoLoginResponse(val token: String, val userId: Long)
 
 // 카카오 로그인 API 인터페이스
 interface ApiService {
     @POST("/api/members/login/kakao")
-    suspend fun kakaoLogin(@Body request: KakaoLoginRequest): retrofit2.Response<KakaoLoginResponse>
+    suspend fun kakaoLogin(@Body request: KakaoLoginRequest): retrofit2.Response<String>
 }

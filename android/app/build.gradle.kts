@@ -2,6 +2,8 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    //firebase  플러그인 추가함.
+    id("com.google.gms.google-services")
 }
 
 
@@ -69,7 +71,13 @@ dependencies {
 
     //kakao 로그인 의존성 추가
     implementation(libs.kakao.user)
+    implementation(libs.kakao.map)
     // Retrofit2 & Gson
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.scalars)
+
+    //firebase 의존성 추가함
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }

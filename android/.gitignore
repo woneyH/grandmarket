@@ -11,6 +11,8 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 
+.idea/*
+
 # Local config (절대 올리지 말 것)
 local.properties
 
@@ -32,3 +34,6 @@ Thumbs.db
 # Keystore (절대 올리지 말 것)
 *.jks
 *.keystore
+
+
+app/google-services.json

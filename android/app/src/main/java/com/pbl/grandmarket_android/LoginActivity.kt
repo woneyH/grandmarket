@@ -14,12 +14,13 @@ import com.pbl.grandmarket_android.view_model.LoginViewModel
 import com.pbl.grandmarket_android.view_model.LoginViewModelFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 /**
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
-    private val IS_SKIP_KAKAO_LOGIN = true
+    private val IS_SKIP_KAKAO_LOGIN = false
     private val serverIp = "http://192.168.0.19:8080"
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
@@ -29,6 +30,7 @@ class LoginActivity : BaseActivity() {
     private val viewModel: LoginViewModel by viewModels {
         val retrofit = Retrofit.Builder()
             .baseUrl(serverIp)
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val apiService = retrofit.create(ApiService::class.java)
@@ -73,7 +75,6 @@ class LoginActivity : BaseActivity() {
 
         // 카카오 로그인 클릭 이벤트
         if(skipKakaoLogin) {
-            // 테스트용 스킵 - 둘 다 홈으로 이동
             sellerBtn.setOnClickListener {
                 UserSession.saveRole(this, UserRole.SELLER)
                 moveToHome(UserRole.SELLER)
