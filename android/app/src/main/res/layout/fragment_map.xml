@@ -76,7 +76,17 @@
     </androidx.cardview.widget.CardView>
 
     <!-- ───────────────────────────────── -->
-    <!--  중앙 핀 (지도 중심 고정)          -->
+    <!--  지도의 정중앙 기준선  -->
+    <!-- ───────────────────────────────── -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMapCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!-- ───────────────────────────────── -->
+    <!--  중앙 핀     -->
     <!-- ───────────────────────────────── -->
     <LinearLayout
         android:id="@+id/layoutCenterPin"
@@ -84,8 +94,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cardBottomSheet"
+        app:layout_constraintBottom_toBottomOf="@id/guidelineMapCenter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -98,7 +107,7 @@
             <View
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:background="@drawable/bg_map_pin_cirecle" />
+                android:background="@drawable/bg_map_pin_circle" />
 
             <!-- 핀 아이콘 -->
             <ImageView
@@ -106,7 +115,7 @@
                 android:layout_width="26dp"
                 android:layout_height="26dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_map_my_localtion"
+                android:src="@drawable/ic_map_my_location"
                 app:tint="#FFFFFF" />
         </FrameLayout>
 
@@ -146,7 +155,7 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_gravity="center"
-                android:src="@drawable/ic_map_my_localtion"
+                android:src="@drawable/ic_map_my_location"
                 app:tint="#E8821A" />
         </FrameLayout>
     </androidx.cardview.widget.CardView>
@@ -203,7 +212,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_map_my_localtion"
+                        android:src="@drawable/ic_map_my_location"
                         app:tint="#FFFFFF" />
                 </FrameLayout>
 
