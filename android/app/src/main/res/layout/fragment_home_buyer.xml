@@ -17,10 +17,10 @@
             android:background="@drawable/main_top_bar">
 
             <TextView
-                android:id="@+id/tvBuyerIntro"
+                android:id="@+id/intro_message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="안녕하세요, 구매자님 👋"
+                android:text="안녕하세요, "
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -38,8 +38,8 @@
                 android:textColor="#ffffff"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/tvBuyerIntro"
-                app:layout_constraintTop_toBottomOf="@id/tvBuyerIntro" />
+                app:layout_constraintStart_toStartOf="@id/intro_message_text"
+                app:layout_constraintTop_toBottomOf="@id/intro_message_text" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnBuyerSearch"
