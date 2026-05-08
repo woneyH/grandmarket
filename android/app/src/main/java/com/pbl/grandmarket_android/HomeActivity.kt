@@ -44,8 +44,8 @@ class HomeActivity : BaseActivity() {
             replaceFragment(SellListFragment())
             updateBottomMenuUI(1)
         }
-        homeBinding.btnChat.setOnClickListener {
-            replaceFragment(ChatFragment())
+        homeBinding.btnMap.setOnClickListener {
+            replaceFragment(MapFragment())
             updateBottomMenuUI(2)
         }
         homeBinding.btnMyInfo.setOnClickListener {
@@ -67,7 +67,7 @@ class HomeActivity : BaseActivity() {
 
         homeBinding.textHome.setTextColor(if (index == 0) activeColor else defaultColor)
         homeBinding.textMySellInfo.setTextColor(if (index == 1) activeColor else defaultColor)
-        homeBinding.textChat.setTextColor(if (index == 2) activeColor else defaultColor)
+        homeBinding.textMap.setTextColor(if (index == 2) activeColor else defaultColor)
         homeBinding.textMyInfo.setTextColor(if (index == 3) activeColor else defaultColor)
         
         // 텍스트 스타일 변경 (Bold 여부)
@@ -75,7 +75,7 @@ class HomeActivity : BaseActivity() {
         android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
         homeBinding.textMySellInfo.setTypeface(null, if(index==1)
             android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
-        homeBinding.textChat.setTypeface(null, if(index==2)
+        homeBinding.textMap.setTypeface(null, if(index==2)
             android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
         homeBinding.textMyInfo.setTypeface(null, if(index==3)
             android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)

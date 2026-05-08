@@ -5,6 +5,10 @@
     <!--인터넷 권한 추가 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--위치 퍼미션 추가함-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
@@ -16,6 +20,11 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Grandmarket_android">
+
+        <!--카카오맵-->
+        <meta-data
+            android:name="com.kakao.vectormap.APP_KEY"
+            android:value="${KAKAO_NATIVE_APP_KEY}" />
 
         <activity
             android:name=".LoginActivity"

@@ -84,7 +84,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btn_chat"
+                android:id="@+id/btn_map"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -97,14 +97,14 @@
                     android:id="@+id/icon_chat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="💬"
+                    android:text="🗺️"
                     android:textSize="24sp" />
 
                 <TextView
-                    android:id="@+id/text_chat"
+                    android:id="@+id/text_map"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="채팅"
+                    android:text="지도"
                     android:textColor="@color/text_mid"
                     android:textSize="12sp" />
             </LinearLayout>

@@ -1,20 +1,16 @@
 package com.pbl.grandmarket_android
 
-import android.graphics.BitmapFactory
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import coil.load
 import com.kakao.sdk.user.UserApiClient
 import com.pbl.grandmarket_android.databinding.FragmentMyInfoBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.net.URL
 
 class MyInfoFragment : Fragment() {
     private var _binding: FragmentMyInfoBinding? = null
@@ -31,10 +27,12 @@ class MyInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bindLogoutAction()
         fetchKakaoProfile()
     }
 
     private fun fetchKakaoProfile() {
+        Log.d("MyInfoFragment", "fetchKakaoProfile() 호출")
         UserApiClient.instance.me { user, error ->
             val currentBinding = _binding ?: return@me
 
@@ -44,32 +42,106 @@ class MyInfoFragment : Fragment() {
             }
 
             val account = user?.kakaoAccount
+            Log.d(
+                "MyInfoFragment",
+                "me 성공 userId=${user?.id}, profileNeedsAgreement=${account?.profileNeedsAgreement}, emailNeedsAgreement=${account?.emailNeedsAgreement}"
+            )
+
+            if (account?.profileNeedsAgreement == true || account?.emailNeedsAgreement == true) {
+                Log.d("MyInfoFragment", "추가 동의 필요 -> loginWithNewScopes 호출")
+                requestKakaoProfileScopes()
+                return@me
+            }
             val profile = account?.profile
 
+            Log.d(
+                "MyInfoFragment",
+                "profile 값 nickname=${profile?.nickname}, email=${account?.email}"
+            )
             currentBinding.tvUserName.text = profile?.nickname ?: "카카오 사용자"
             currentBinding.tvKakaoEmail.text = account?.email ?: "카카오 계정 연동"
 
             val imageUrl = profile?.thumbnailImageUrl ?: profile?.profileImageUrl
-            if (imageUrl.isNullOrBlank()) return@me
+            if (imageUrl.isNullOrBlank()) {
+                Log.d("MyInfoFragment", "프로필 이미지 URL 없음(기본 이미지 유지)")
+                return@me
+            }
+            Log.d("MyInfoFragment", "프로필 이미지 URL=$imageUrl")
 
-            viewLifecycleOwner.lifecycleScope.launch {
-                val bitmap = loadBitmap(imageUrl)
-                if (bitmap != null && _binding != null) {
-                    _binding?.ivKakaoProfile?.setImageBitmap(bitmap)
-                }
+            // Coil 적용
+            currentBinding.ivKakaoProfile.load(imageUrl) {
+                crossfade(true) // 부드럽게 나타나는 효과
+                // placeholder(R.drawable.기본_프로필_이미지) // 로딩 중 보여줄 이미지
+                // error(R.drawable.에러_이미지) // 로딩 실패 시 보여줄 이미지
+                listener(
+                    onSuccess = { _, _ -> Log.d("MyInfoFragment", "Coil: 프로필 이미지 적용 완료") },
+                    onError = { _, _ -> Log.e("MyInfoFragment", "Coil: 프로필 이미지 로드 실패") }
+                )
             }
         }
     }
 
-    private suspend fun loadBitmap(imageUrl: String) = withContext(Dispatchers.IO) {
-        try {
-            URL(imageUrl).openStream().use { input ->
-                BitmapFactory.decodeStream(input)
+    private fun requestKakaoProfileScopes() {
+        val scopes = listOf("profile_nickname", "profile_image", "account_email")
+        UserApiClient.instance.loginWithNewScopes(requireActivity(), scopes) { _, error ->
+            if (error != null) {
+                Log.e("MyInfoFragment", "카카오 추가 동의 요청 실패", error)
+                return@loginWithNewScopes
             }
-        } catch (e: IOException) {
-            Log.e("MyInfoFragment", "프로필 이미지 로드 실패", e)
-            null
+            Log.d("MyInfoFragment", "카카오 추가 동의 성공 -> 프로필 재조회")
+            fetchKakaoProfile()
         }
+    }
+
+    private fun bindLogoutAction() {
+        binding.menuLogout.setOnTouchListener { v, event ->
+            when (event.action) {
+                android.view.MotionEvent.ACTION_DOWN -> v.alpha = 0.65f
+                android.view.MotionEvent.ACTION_UP,
+                android.view.MotionEvent.ACTION_CANCEL -> v.alpha = 1.0f
+            }
+            false
+        }
+
+        binding.menuLogout.setOnClickListener {
+            Toast.makeText(requireContext(), "로그아웃 처리 중...", Toast.LENGTH_SHORT).show()
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    Log.e("MyInfoFragment", "카카오 로그아웃 실패", error)
+                    Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
+                    return@logout
+                }
+
+                context?.let { UserSession.clear(it) }
+                Toast.makeText(requireContext(), "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
+                moveToLogin()
+            }
+        }
+
+        binding.menuLogout.setOnLongClickListener {
+            Toast.makeText(requireContext(), "연결 끊기 처리 중...", Toast.LENGTH_SHORT).show()
+            UserApiClient.instance.unlink { error ->
+                if (error != null) {
+                    Log.e("MyInfoFragment", "카카오 연결 끊기(unlink) 실패", error)
+                    Toast.makeText(requireContext(), "연결 끊기 실패", Toast.LENGTH_SHORT).show()
+                    return@unlink
+                }
+
+                Log.d("MyInfoFragment", "카카오 연결 끊기(unlink) 성공")
+                UserSession.clear(requireContext())
+                Toast.makeText(requireContext(), "연결 끊기 완료(재로그인 필요)", Toast.LENGTH_SHORT).show()
+                moveToLogin()
+            }
+            true
+        }
+    }
+
+    private fun moveToLogin() {
+        val intent = Intent(requireContext(), LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     override fun onDestroyView() {

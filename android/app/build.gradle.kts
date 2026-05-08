@@ -2,12 +2,15 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
+    //firebase  플러그인 추가함.
+    id("com.google.gms.google-services")
 }
 
 
 val properties = Properties()
 properties.load(project.rootProject.file("local.properties").inputStream())
 val kakaoNativeAppKey = properties.getProperty("KAKAO_NATIVE_APP_KEY") ?: ""
+val serverIp = properties.getProperty("SERVER_IP") ?: ""
 
 
 android {
@@ -28,7 +31,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = kakaoNativeAppKey
+        manifestPlaceholders["SERVER_IP"] = serverIp
         buildConfigField("String", "KAKAO_NATIVE_APP_KEY", "\"${kakaoNativeAppKey}\"")
+        buildConfigField("String","SERVER_IP","\"${serverIp}\"")
     }
 
     buildTypes {
@@ -69,7 +74,21 @@ dependencies {
 
     //kakao 로그인 의존성 추가
     implementation(libs.kakao.user)
+    implementation(libs.kakao.map)
     // Retrofit2 & Gson
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.converter.gson)
+    implementation(libs.retrofit.converter.scalars)
+
+    //firebase 의존성 추가함
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore-ktx:25.1.4")
+
+    //Google Location 의존성 추가
+    implementation("com.google.android.gms:play-services-location:21.2.0")
+
+    //이미지 라이브러리 coil
+    implementation("io.coil-kt:coil:2.6.0")
+
 }
