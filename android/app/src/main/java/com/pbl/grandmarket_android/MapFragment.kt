@@ -19,6 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import com.google.firebase.firestore.FirebaseFirestore
+import com.kakao.sdk.user.UserApiClient
 import com.pbl.grandmarket_android.databinding.FragmentMapBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -86,7 +88,11 @@ class MapFragment : Fragment() {
 
                 } else {
                     binding.tvSelectedAddress.text = "위치를 찾을 수 없습니다."
-                    Toast.makeText(requireContext(), "위치를 찾을 수 없습니다. GPS를 확인해주세요.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "위치를 찾을 수 없습니다. GPS를 확인해주세요.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
     }
@@ -154,6 +160,8 @@ class MapFragment : Fragment() {
         binding.btnCurrentLocation.setOnClickListener {
             checkLocationPermission()
         }
+
+        btnLocationClick()
     }
 
     override fun onResume() {
@@ -208,5 +216,47 @@ class MapFragment : Fragment() {
         }
         super.onDestroyView()
         _binding = null
+    }
+
+
+    fun btnLocationClick() {
+        binding.btnRegisterLocation.setOnClickListener {
+            UserApiClient.instance.me { user, error ->
+                if(error != null) {
+                    Log.e("Kakao", "사용자 정보 요청 실패", error)
+                    return@me
+                }
+
+                if(user != null) {
+                    val kakaoId = user.id
+                    val nickname = user.kakaoAccount?.profile?.nickname ?: "이름 없음"
+
+                    //지도의 중앙 좌표값
+                    val centerPos = kakaoMap?.cameraPosition?.position
+                    val lat = centerPos?.latitude
+                    val lng = centerPos?.longitude
+                    val address = binding.tvSelectedAddress.text.toString()
+
+                    val storeMap = hashMapOf(
+                        "kakaoId" to kakaoId,
+                        "nickname" to nickname,
+                        "latitude" to lat,
+                        "longitude" to lng,
+                        "address" to address,
+                        "timestamp" to System.currentTimeMillis()
+                    )
+
+                    FirebaseFirestore.getInstance().collection("storeLocation")
+                        .document(kakaoId.toString())
+                        .set(storeMap)
+                        .addOnSuccessListener {
+                            Toast.makeText(requireContext(),"점포 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            Toast.makeText(requireContext(),"점포 등록 실패", Toast.LENGTH_SHORT).show()
+                        }
+                }
+            }
+        }
     }
 }
