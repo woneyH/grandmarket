@@ -28,6 +28,7 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.pbl.grandmarket_android.repository.StoreLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -161,7 +162,7 @@ class MapFragment : Fragment() {
             checkLocationPermission()
         }
 
-        btnLocationClick()
+        setLocationRegistration()
     }
 
     override fun onResume() {
@@ -219,7 +220,7 @@ class MapFragment : Fragment() {
     }
 
 
-    fun btnLocationClick() {
+    private fun setLocationRegistration() {
         binding.btnRegisterLocation.setOnClickListener {
             UserApiClient.instance.me { user, error ->
                 if(error != null) {
@@ -237,18 +238,17 @@ class MapFragment : Fragment() {
                     val lng = centerPos?.longitude
                     val address = binding.tvSelectedAddress.text.toString()
 
-                    val storeMap = hashMapOf(
-                        "kakaoId" to kakaoId,
-                        "nickname" to nickname,
-                        "latitude" to lat,
-                        "longitude" to lng,
-                        "address" to address,
-                        "timestamp" to System.currentTimeMillis()
+                    val storeLocation = StoreLocation(
+                        kakaoId = kakaoId,
+                        nickname = nickname,
+                        latitude = lat,
+                        longitude = lng,
+                        address = address
                     )
 
                     FirebaseFirestore.getInstance().collection("storeLocation")
                         .document(kakaoId.toString())
-                        .set(storeMap)
+                        .set(storeLocation)
                         .addOnSuccessListener {
                             Toast.makeText(requireContext(),"점포 등록되었습니다!", Toast.LENGTH_SHORT).show()
                         }
