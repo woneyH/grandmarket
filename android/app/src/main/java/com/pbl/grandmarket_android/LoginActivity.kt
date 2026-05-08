@@ -16,12 +16,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
+import com.pbl.grandmarket_android.BuildConfig.SERVER_IP
+
 /**
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
     private val IS_SKIP_KAKAO_LOGIN = false
-    private val serverIp = "http://192.168.0.19:8080"
+    private val serverIp = SERVER_IP
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
@@ -52,6 +54,7 @@ class LoginActivity : BaseActivity() {
                 is Resource.Loading -> {
                     Log.d("LoginActivity", "로그인 진행 중...")
                 }
+
                 is Resource.Success -> {
                     Log.d("LoginActivity", "로그인 성공: ${resource.data}")
                     Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
@@ -59,8 +62,9 @@ class LoginActivity : BaseActivity() {
                     UserSession.saveRole(this, role)
                     moveToHome(role)
                 }
+
                 is Resource.Error<*> -> {
-                    val errorMessage = resource.data?.toString()?:"로그인 실패"
+                    val errorMessage = resource.data?.toString() ?: "로그인 실패"
                     Log.e("LoginActivity", "서버 로그인 에러: $errorMessage")
                     Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -74,16 +78,16 @@ class LoginActivity : BaseActivity() {
         val buyerBtn = loginBinding.btnBuyerLogin
 
         // 카카오 로그인 클릭 이벤트
-        if(skipKakaoLogin) {
+        if (skipKakaoLogin) {
             sellerBtn.setOnClickListener {
                 UserSession.saveRole(this, UserRole.SELLER)
                 moveToHome(UserRole.SELLER)
             }
-            buyerBtn.setOnClickListener  {
+            buyerBtn.setOnClickListener {
                 UserSession.saveRole(this, UserRole.BUYER)
                 moveToHome(UserRole.BUYER)
             }
-        }else {
+        } else {
             sellerBtn.setOnClickListener {
                 UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
                     if (error != null) {

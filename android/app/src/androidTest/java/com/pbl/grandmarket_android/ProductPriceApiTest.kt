@@ -9,12 +9,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import com.pbl.grandmarket_android.BuildConfig.SERVER_IP
 
 @RunWith(AndroidJUnit4::class)
 class ProductPriceApiTest {
 
     private val api = Retrofit.Builder()
-        .baseUrl("http://192.168.0.19:8080")
+        .baseUrl(SERVER_IP)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
         .create(ApiProductService::class.java)
