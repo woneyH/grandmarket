@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     //firebase  플러그인 추가함.
-    id("com.google.gms.google-services")
+    // id("com.google.gms.google-services") // 임시 주석 처리
 }
 
 
@@ -91,4 +91,10 @@ dependencies {
     //이미지 라이브러리 coil
     implementation("io.coil-kt:coil:2.6.0")
 
+    // AI & CameraX
+    implementation(libs.onnxruntime.android)
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
 }

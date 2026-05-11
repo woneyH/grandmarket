@@ -66,7 +66,8 @@ class SellListFragment: Fragment() {
 
     private fun setupFab() {
         binding.fabAddProduct.setOnClickListener {
-            // TODO: 상품 등록 화면으로 이동
+            val intent = android.content.Intent(requireContext(), ScannerActivity::class.java)
+            startActivity(intent)
         }
     }
 
