@@ -1,6 +1,6 @@
+package com.pbl.grandmarket_android.data.remote
 
-package com.pbl.grandmarket_android.network
-
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -14,5 +14,5 @@ data class KakaoLoginRequest(
 // 카카오 로그인 API 인터페이스
 interface ApiService {
     @POST("/api/members/login/kakao")
-    suspend fun kakaoLogin(@Body request: KakaoLoginRequest): retrofit2.Response<String>
+    suspend fun kakaoLogin(@Body request: KakaoLoginRequest): Response<String>
 }

@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android.repository
+package com.pbl.grandmarket_android.data.repository
 
 import com.google.firebase.Timestamp
 

@@ -1,14 +1,20 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.item_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.pbl.grandmarket_android.databinding.FragmentSellListBinding
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.pbl.grandmarket_android.R
+import com.pbl.grandmarket_android.ui.adapter.SaleItem
+import com.pbl.grandmarket_android.ui.adapter.SaleStatus
+import com.pbl.grandmarket_android.ui.adapter.SalesAdapter
+import com.pbl.grandmarket_android.view_model.SalesListViewModel
+import com.pbl.grandmarket_android.databinding.FragmentSellListBinding
 
 class SellListFragment: Fragment() {
     private var _binding: FragmentSellListBinding? = null
@@ -81,7 +87,7 @@ class SellListFragment: Fragment() {
     }
 
     private fun showItemOptionsMenu(item: SaleItem) {
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setItems(arrayOf("수정", "상태 변경", "삭제")) { _, which ->
                 when (which) {
                     0 -> { /* TODO: 수정 */
@@ -95,7 +101,7 @@ class SellListFragment: Fragment() {
     }
 
     private fun showStatusChangeDialog(item: SaleItem) {
-        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+        AlertDialog.Builder(requireContext())
             .setTitle("상태 변경")
             .setItems(arrayOf("판매중", "예약중", "판매완료")) { _, which ->
                 val newStatus = when (which) {

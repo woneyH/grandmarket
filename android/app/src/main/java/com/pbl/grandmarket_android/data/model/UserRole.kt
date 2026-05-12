@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.data.model
 
 enum class UserRole(val value: String) {
     SELLER("SELLER"),

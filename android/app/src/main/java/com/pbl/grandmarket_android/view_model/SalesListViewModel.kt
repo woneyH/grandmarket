@@ -1,8 +1,11 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.view_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.pbl.grandmarket_android.ui.adapter.ProductCategory
+import com.pbl.grandmarket_android.ui.adapter.SaleItem
+import com.pbl.grandmarket_android.ui.adapter.SaleStatus
 
 class SalesListViewModel : ViewModel() {
 
@@ -21,44 +24,44 @@ class SalesListViewModel : ViewModel() {
         allItems.addAll(
             listOf(
                 SaleItem(
-                    id         = "1",
-                    title      = "국내산 배추",
-                    price      = 3500,
-                    category   = ProductCategory.VEGETABLE,
-                    imageUrl   = null,
+                    id = "1",
+                    title = "국내산 배추",
+                    price = 3500,
+                    category = ProductCategory.VEGETABLE,
+                    imageUrl = null,
                     stockCount = 32,
-                    status     = SaleStatus.ON_SALE,
-                    createdAt  = System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000L
+                    status = SaleStatus.ON_SALE,
+                    createdAt = System.currentTimeMillis() - 1 * 24 * 60 * 60 * 1000L
                 ),
                 SaleItem(
-                    id         = "2",
-                    title      = "한우 등심",
-                    price      = 42000,
-                    category   = ProductCategory.MEAT,
-                    imageUrl   = null,
+                    id = "2",
+                    title = "한우 등심",
+                    price = 42000,
+                    category = ProductCategory.MEAT,
+                    imageUrl = null,
                     stockCount = 5,
-                    status     = SaleStatus.RESERVED,
-                    createdAt  = System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000L
+                    status = SaleStatus.RESERVED,
+                    createdAt = System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000L
                 ),
                 SaleItem(
-                    id         = "3",
-                    title      = "햇 양파",
-                    price      = 5900,
-                    category   = ProductCategory.VEGETABLE,
-                    imageUrl   = null,
+                    id = "3",
+                    title = "햇 양파",
+                    price = 5900,
+                    category = ProductCategory.VEGETABLE,
+                    imageUrl = null,
                     stockCount = 18,
-                    status     = SaleStatus.ON_SALE,
-                    createdAt  = System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000L
+                    status = SaleStatus.ON_SALE,
+                    createdAt = System.currentTimeMillis() - 3 * 24 * 60 * 60 * 1000L
                 ),
                 SaleItem(
-                    id         = "4",
-                    title      = "국내산 삼겹살",
-                    price      = 12800,
-                    category   = ProductCategory.MEAT,
-                    imageUrl   = null,
+                    id = "4",
+                    title = "국내산 삼겹살",
+                    price = 12800,
+                    category = ProductCategory.MEAT,
+                    imageUrl = null,
                     stockCount = 0,
-                    status     = SaleStatus.SOLD_OUT,
-                    createdAt  = System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000L
+                    status = SaleStatus.SOLD_OUT,
+                    createdAt = System.currentTimeMillis() - 5 * 24 * 60 * 60 * 1000L
                 )
             )
         )

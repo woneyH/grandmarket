@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android.network
+package com.pbl.grandmarket_android.data.remote
 
 import retrofit2.Response
 import retrofit2.http.GET

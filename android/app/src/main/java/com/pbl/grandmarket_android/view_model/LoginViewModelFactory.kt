@@ -2,7 +2,7 @@ package com.pbl.grandmarket_android.view_model
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.pbl.grandmarket_android.repository.AuthRepository
+import com.pbl.grandmarket_android.data.repository.AuthRepository
 
 class LoginViewModelFactory(private val repository: AuthRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

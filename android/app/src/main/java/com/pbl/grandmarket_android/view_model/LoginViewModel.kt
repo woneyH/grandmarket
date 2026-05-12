@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.pbl.grandmarket_android.UserRole
+import com.pbl.grandmarket_android.data.model.UserRole
 import com.pbl.grandmarket_android.util.Resource
-import com.pbl.grandmarket_android.repository.AuthRepository
+import com.pbl.grandmarket_android.data.repository.AuthRepository
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: AuthRepository) : ViewModel() {

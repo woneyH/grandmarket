@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.kakao.vectormap.MapView
+        android:id="@+id/map_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/layoutCenterPin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <FrameLayout android:layout_width="48dp" android:layout_height="48dp">
+            <View android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_map_pin_circle" />
+            <ImageView android:id="@+id/ivPin" android:layout_width="26dp" android:layout_height="26dp" android:layout_gravity="center" android:src="@drawable/ic_map_my_location" app:tint="#FFFFFF" />
+        </FrameLayout>
+        <View android:layout_width="3dp" android:layout_height="10dp" android:background="#E8821A" />
+        <View android:layout_width="14dp" android:layout_height="5dp" android:background="@drawable/bg_map_pin_shadow" />
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fabCurrentLocation"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="37dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="6dp"
+        app:cardBackgroundColor="#FFFDF8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent">
+            <ImageView android:layout_width="22dp" android:layout_height="22dp" android:layout_gravity="center" android:src="@drawable/ic_map_my_location" app:tint="#E8821A" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_search_here"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="현 위치에서 점포 검색"
+        android:textColor="@color/black"
+        app:cornerRadius="20dp"
+        app:backgroundTint="@color/white"
+        app:strokeColor="#DDDDDD"
+        app:strokeWidth="1dp"
+        android:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_show_store_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_show_store_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="주변 점포 0개"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="12dp"
+        android:textColor="@color/white"
+        app:cornerRadius="24dp"
+        app:backgroundTint="@color/orange_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
