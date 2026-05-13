@@ -53,6 +53,10 @@ android {
         viewBinding = true
         buildConfig = true
     }
+
+    androidResources {
+        noCompress += "onnx" // onnx 파일은 압축X
+    }
 }
 
 dependencies {
@@ -90,5 +94,13 @@ dependencies {
 
     //이미지 라이브러리 coil
     implementation("io.coil-kt:coil:2.6.0")
+
+
+    // AI & CameraX
+    implementation(libs.onnxruntime.android)
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
 
 }
