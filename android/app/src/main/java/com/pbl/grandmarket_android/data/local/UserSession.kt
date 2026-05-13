@@ -17,7 +17,7 @@ object UserSession {
     fun getRole(context: Context): UserRole {
         val roleValue = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             .getString(KEY_USER_ROLE, null)
-        return UserRole.Companion.from(roleValue)
+        return UserRole.from(roleValue)
     }
 
     fun clear(context: Context) {
