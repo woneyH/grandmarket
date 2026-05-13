@@ -1,8 +1,8 @@
-package com.pbl.grandmarket_android.repository
+package com.pbl.grandmarket_android.data.repository
 
-import com.pbl.grandmarket_android.UserRole
-import com.pbl.grandmarket_android.network.ApiService
-import com.pbl.grandmarket_android.network.KakaoLoginRequest
+import com.pbl.grandmarket_android.data.model.UserRole
+import com.pbl.grandmarket_android.data.remote.ApiService
+import com.pbl.grandmarket_android.data.remote.KakaoLoginRequest
 import retrofit2.Response
 
 class AuthRepository(private val apiService: ApiService) {

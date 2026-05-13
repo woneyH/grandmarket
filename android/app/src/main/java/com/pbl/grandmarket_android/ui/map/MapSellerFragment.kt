@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.map
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -21,21 +21,22 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.user.UserApiClient
-import com.pbl.grandmarket_android.databinding.FragmentMapBinding
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
-import com.pbl.grandmarket_android.repository.StoreLocation
+import com.pbl.grandmarket_android.util.KakaoMapSupport
+import com.pbl.grandmarket_android.data.repository.StoreLocation
+import com.pbl.grandmarket_android.databinding.FragmentMapSellerBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class MapFragment : Fragment() {
-    private var _binding: FragmentMapBinding? = null
+class MapSellerFragment : Fragment() {
+    private var _binding: FragmentMapSellerBinding? = null
     private val binding get() = _binding!!
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -144,7 +145,7 @@ class MapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMapBinding.inflate(inflater, container, false)
+        _binding = FragmentMapSellerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -222,7 +223,7 @@ class MapFragment : Fragment() {
 
     private fun setLocationRegistration() {
         binding.btnRegisterLocation.setOnClickListener {
-            UserApiClient.instance.me { user, error ->
+            UserApiClient.Companion.instance.me { user, error ->
                 if(error != null) {
                     Log.e("Kakao", "사용자 정보 요청 실패", error)
                     return@me

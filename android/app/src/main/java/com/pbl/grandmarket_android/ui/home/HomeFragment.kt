@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.home
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.kakao.sdk.user.UserApiClient
+import com.pbl.grandmarket_android.R
+import com.pbl.grandmarket_android.data.model.UserRole
+import com.pbl.grandmarket_android.data.local.UserSession
 
 class HomeFragment : Fragment() {
 

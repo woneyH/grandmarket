@@ -2,7 +2,7 @@ package com.pbl.grandmarket_android
 
 import android.util.Log
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.pbl.grandmarket_android.network.ApiProductService
+import com.pbl.grandmarket_android.data.remote.ApiProductService
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

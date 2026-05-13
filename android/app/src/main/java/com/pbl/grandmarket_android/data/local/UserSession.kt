@@ -1,6 +1,7 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.data.local
 
 import android.content.Context
+import com.pbl.grandmarket_android.data.model.UserRole
 
 object UserSession {
     private const val PREF_NAME = "grandmarket_session"
@@ -16,7 +17,7 @@ object UserSession {
     fun getRole(context: Context): UserRole {
         val roleValue = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
             .getString(KEY_USER_ROLE, null)
-        return UserRole.from(roleValue)
+        return UserRole.Companion.from(roleValue)
     }
 
     fun clear(context: Context) {

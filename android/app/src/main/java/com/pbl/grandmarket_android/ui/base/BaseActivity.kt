@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.base
 
 import android.os.Bundle
 import android.view.View

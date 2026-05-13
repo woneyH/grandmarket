@@ -1,12 +1,21 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.home
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.pbl.grandmarket_android.ui.map.MapSellerFragment
+import com.pbl.grandmarket_android.ui.myinfo.MyInfoFragment
+import com.pbl.grandmarket_android.R
+import com.pbl.grandmarket_android.ui.item_list.SellListFragment
+import com.pbl.grandmarket_android.data.model.UserRole
+import com.pbl.grandmarket_android.data.local.UserSession
 import com.pbl.grandmarket_android.databinding.ActivityHomeBinding
+import com.pbl.grandmarket_android.ui.base.BaseActivity
+import com.pbl.grandmarket_android.ui.map.MapBuyerFragment
 
 class HomeActivity : BaseActivity() {
     private var backClickWait: Long = 0L
@@ -21,7 +30,7 @@ class HomeActivity : BaseActivity() {
         applyBottomInsets(homeBinding.bottomMenuBar)
         val roleFromIntent = intent.getStringExtra(EXTRA_USER_ROLE)
         if (roleFromIntent != null) {
-            UserSession.saveRole(this, UserRole.from(roleFromIntent))
+            UserSession.saveRole(this, UserRole.Companion.from(roleFromIntent))
         }
 
         // 초기 화면 설정
@@ -45,7 +54,13 @@ class HomeActivity : BaseActivity() {
             updateBottomMenuUI(1)
         }
         homeBinding.btnMap.setOnClickListener {
-            replaceFragment(MapFragment())
+            val currentRole = UserSession.getRole(this) // UserSession에 구현된 get 메서드 사용
+
+            if (currentRole == UserRole.BUYER) {
+                replaceFragment(MapBuyerFragment()) // 새로 만들 구매자용 지도 뷰
+            } else {
+                replaceFragment(MapSellerFragment()) // 기존에 만든 판매자용 지도 뷰
+            }
             updateBottomMenuUI(2)
         }
         homeBinding.btnMyInfo.setOnClickListener {
@@ -72,13 +87,13 @@ class HomeActivity : BaseActivity() {
         
         // 텍스트 스타일 변경 (Bold 여부)
         homeBinding.textHome.setTypeface(null, if(index==0)
-        android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+        Typeface.BOLD else Typeface.NORMAL)
         homeBinding.textMySellInfo.setTypeface(null, if(index==1)
-            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+            Typeface.BOLD else Typeface.NORMAL)
         homeBinding.textMap.setTypeface(null, if(index==2)
-            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+            Typeface.BOLD else Typeface.NORMAL)
         homeBinding.textMyInfo.setTypeface(null, if(index==3)
-            android.graphics.Typeface.BOLD else android.graphics.Typeface.NORMAL)
+            Typeface.BOLD else Typeface.NORMAL)
     }
 
     private val onBackPressCallback = object : OnBackPressedCallback(true) {

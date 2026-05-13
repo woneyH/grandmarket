@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,9 +6,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.kakao.sdk.user.UserApiClient
+import com.pbl.grandmarket_android.BuildConfig
+import com.pbl.grandmarket_android.data.model.UserRole
+import com.pbl.grandmarket_android.data.local.UserSession
+import com.pbl.grandmarket_android.data.remote.ApiService
+import com.pbl.grandmarket_android.data.repository.AuthRepository
 import com.pbl.grandmarket_android.databinding.ActivityLoginBinding
-import com.pbl.grandmarket_android.network.ApiService
-import com.pbl.grandmarket_android.repository.AuthRepository
+import com.pbl.grandmarket_android.ui.base.BaseActivity
+import com.pbl.grandmarket_android.ui.home.HomeActivity
 import com.pbl.grandmarket_android.util.Resource
 import com.pbl.grandmarket_android.view_model.LoginViewModel
 import com.pbl.grandmarket_android.view_model.LoginViewModelFactory
@@ -16,14 +21,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
-import com.pbl.grandmarket_android.BuildConfig.SERVER_IP
-
 /**
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
     private val IS_SKIP_KAKAO_LOGIN = false
-    private val serverIp = SERVER_IP
+    private val serverIp = BuildConfig.SERVER_IP
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
@@ -89,7 +92,7 @@ class LoginActivity : BaseActivity() {
             }
         } else {
             sellerBtn.setOnClickListener {
-                UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
+                UserApiClient.Companion.instance.loginWithKakaoAccount(this) { token, error ->
                     if (error != null) {
                         Log.e("kakao login", "카카오 로그인 실패: $error")
                     } else if (token != null) {
@@ -100,7 +103,7 @@ class LoginActivity : BaseActivity() {
             }
 
             buyerBtn.setOnClickListener {
-                UserApiClient.instance.loginWithKakaoAccount(this) { token, error ->
+                UserApiClient.Companion.instance.loginWithKakaoAccount(this) { token, error ->
                     if (error != null) {
                         Log.e("kakao login", "카카오 로그인 실패: $error")
                     } else if (token != null) {
@@ -115,7 +118,7 @@ class LoginActivity : BaseActivity() {
 
     private fun moveToHome(role: UserRole) {
         val intent = Intent(this, HomeActivity::class.java)
-        intent.putExtra(HomeActivity.EXTRA_USER_ROLE, role.value)
+        intent.putExtra(HomeActivity.Companion.EXTRA_USER_ROLE, role.value)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()

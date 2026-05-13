@@ -1,16 +1,19 @@
-package com.pbl.grandmarket_android
+package com.pbl.grandmarket_android.ui.myinfo
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import coil.load
 import com.kakao.sdk.user.UserApiClient
+import com.pbl.grandmarket_android.data.local.UserSession
 import com.pbl.grandmarket_android.databinding.FragmentMyInfoBinding
+import com.pbl.grandmarket_android.ui.login.LoginActivity
 
 class MyInfoFragment : Fragment() {
     private var _binding: FragmentMyInfoBinding? = null
@@ -33,7 +36,7 @@ class MyInfoFragment : Fragment() {
 
     private fun fetchKakaoProfile() {
         Log.d("MyInfoFragment", "fetchKakaoProfile() 호출")
-        UserApiClient.instance.me { user, error ->
+        UserApiClient.Companion.instance.me { user, error ->
             val currentBinding = _binding ?: return@me
 
             if (error != null) {
@@ -83,7 +86,7 @@ class MyInfoFragment : Fragment() {
 
     private fun requestKakaoProfileScopes() {
         val scopes = listOf("profile_nickname", "profile_image", "account_email")
-        UserApiClient.instance.loginWithNewScopes(requireActivity(), scopes) { _, error ->
+        UserApiClient.Companion.instance.loginWithNewScopes(requireActivity(), scopes) { _, error ->
             if (error != null) {
                 Log.e("MyInfoFragment", "카카오 추가 동의 요청 실패", error)
                 return@loginWithNewScopes
@@ -96,16 +99,16 @@ class MyInfoFragment : Fragment() {
     private fun bindLogoutAction() {
         binding.menuLogout.setOnTouchListener { v, event ->
             when (event.action) {
-                android.view.MotionEvent.ACTION_DOWN -> v.alpha = 0.65f
-                android.view.MotionEvent.ACTION_UP,
-                android.view.MotionEvent.ACTION_CANCEL -> v.alpha = 1.0f
+                MotionEvent.ACTION_DOWN -> v.alpha = 0.65f
+                MotionEvent.ACTION_UP,
+                MotionEvent.ACTION_CANCEL -> v.alpha = 1.0f
             }
             false
         }
 
         binding.menuLogout.setOnClickListener {
             Toast.makeText(requireContext(), "로그아웃 처리 중...", Toast.LENGTH_SHORT).show()
-            UserApiClient.instance.logout { error ->
+            UserApiClient.Companion.instance.logout { error ->
                 if (error != null) {
                     Log.e("MyInfoFragment", "카카오 로그아웃 실패", error)
                     Toast.makeText(requireContext(), "로그아웃 실패", Toast.LENGTH_SHORT).show()
@@ -120,7 +123,7 @@ class MyInfoFragment : Fragment() {
 
         binding.menuLogout.setOnLongClickListener {
             Toast.makeText(requireContext(), "연결 끊기 처리 중...", Toast.LENGTH_SHORT).show()
-            UserApiClient.instance.unlink { error ->
+            UserApiClient.Companion.instance.unlink { error ->
                 if (error != null) {
                     Log.e("MyInfoFragment", "카카오 연결 끊기(unlink) 실패", error)
                     Toast.makeText(requireContext(), "연결 끊기 실패", Toast.LENGTH_SHORT).show()
