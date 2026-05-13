@@ -3,7 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     //firebase  플러그인 추가함.
-    // id("com.google.gms.google-services") // 임시 주석 처리
+    id("com.google.gms.google-services")
 }
 
 
