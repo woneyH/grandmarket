@@ -13,8 +13,8 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import com.pbl.grandmarket_android.util.OverlayView
-import com.pbl.grandmarket_android.util.YoloDetector
+import com.pbl.grandmarket_android.ai.OverlayView
+import com.pbl.grandmarket_android.ai.YoloDetector
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 

@@ -9,6 +9,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
+    <!--카메라 퍼미션 추가-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera.any" />
+
     <application
         android:name=".GlobalApplication"
         android:allowBackup="true"
@@ -28,6 +32,16 @@
 
         <activity
             android:name=".LoginActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false">
+        </activity>
+
+        <activity
+            android:name=".ScannerActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,7 +50,7 @@
         </activity>
 
         <activity
-            android:name=".HomeActivity"
+            android:name=".ProductRegistrationActivity"
             android:exported="false">
         </activity>
 

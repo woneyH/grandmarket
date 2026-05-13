@@ -1,4 +1,4 @@
-package com.pbl.grandmarket_android.util
+package com.pbl.grandmarket_android.ai
 
 import ai.onnxruntime.OnnxTensor
 import ai.onnxruntime.OrtEnvironment

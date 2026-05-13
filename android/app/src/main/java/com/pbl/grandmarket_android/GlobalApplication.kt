@@ -8,9 +8,11 @@ import com.pbl.grandmarket_android.BuildConfig.KAKAO_NATIVE_APP_KEY
 class GlobalApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        KakaoSdk.init(this, KAKAO_NATIVE_APP_KEY)
-        if (KakaoMapSupport.isSupportedAbi) {
-            KakaoMapSdk.init(this, KAKAO_NATIVE_APP_KEY)
+        if (KAKAO_NATIVE_APP_KEY.isNotEmpty()) {
+            KakaoSdk.init(this, KAKAO_NATIVE_APP_KEY)
+            if (KakaoMapSupport.isSupportedAbi) {
+                KakaoMapSdk.init(this, KAKAO_NATIVE_APP_KEY)
+            }
         }
     }
 }

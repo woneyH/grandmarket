@@ -22,7 +22,7 @@ import com.pbl.grandmarket_android.BuildConfig.SERVER_IP
  *  로그인 액티비티 앱 실행 시 바로 보여질 액티비티 화면
  */
 class LoginActivity : BaseActivity() {
-    private val IS_SKIP_KAKAO_LOGIN = false
+    private val IS_SKIP_KAKAO_LOGIN = true
     private val serverIp = SERVER_IP
     private val loginBinding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
@@ -30,8 +30,9 @@ class LoginActivity : BaseActivity() {
 
     // ViewModel 초기화 (변경된 패키지 경로 적용: view_model)
     private val viewModel: LoginViewModel by viewModels {
+        val baseUrl = if (serverIp.isNotEmpty() && serverIp.startsWith("http")) serverIp else "http://10.0.2.2:8000/"
         val retrofit = Retrofit.Builder()
-            .baseUrl(serverIp)
+            .baseUrl(baseUrl)
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
