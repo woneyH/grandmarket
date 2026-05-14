@@ -79,7 +79,7 @@ class MapBuyerFragment : Fragment() {
 
         startMap()
 
-        // 1. 내 위치 버튼 (우측 하단)
+        // 내 위치 버튼 (우측 하단)
         binding.fabCurrentLocation.setOnClickListener {
             checkLocationPermission()
         }
@@ -98,10 +98,10 @@ class MapBuyerFragment : Fragment() {
             }
         }
 
-        // 3. 하단 리스트 보기 팝업 버튼
+        // 하단 리스트 보기 팝업 버튼
         binding.btnShowStoreList.setOnClickListener {
             if (storeList.isEmpty()) {
-                Toast.makeText(requireContext(), "주변 반경 20km 내에 점포가 없습니다.", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), "주변 반경 15km 내에 점포가 없습니다.", Toast.LENGTH_SHORT)
                     .show()
             } else {
                 val bottomSheet = StoreListBottomSheetFragment(storeList)

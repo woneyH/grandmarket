@@ -45,7 +45,7 @@ class SaleItemDiffCallback : DiffUtil.ItemCallback<SaleItem>() {
 class SalesAdapter(
     private val onItemClick: (SaleItem) -> Unit,
     private val onMoreClick: (SaleItem) -> Unit
-) : androidx.recyclerview.widget.ListAdapter<SaleItem, SalesAdapter.SaleViewHolder>(SaleItemDiffCallback()) {
+) : ListAdapter<SaleItem, SalesAdapter.SaleViewHolder>(SaleItemDiffCallback()) {
 
     inner class SaleViewHolder(
         private val binding: ItemSaleBinding
@@ -64,12 +64,12 @@ class SalesAdapter(
                 ProductCategory.VEGETABLE -> {
                     binding.tvCategory.text = "채소"
                     binding.tvCategory.setTextColor(Color.parseColor("#C05E00"))
-                    binding.tvCategory.setBackgroundResource(_root_ide_package_.com.pbl.grandmarket_android.R.drawable.bg_item_list_veg)
+                    binding.tvCategory.setBackgroundResource(com.pbl.grandmarket_android.R.drawable.bg_item_list_veg)
                 }
                 ProductCategory.MEAT -> {
                     binding.tvCategory.text = "육류"
                     binding.tvCategory.setTextColor(Color.parseColor("#B71C1C"))
-                    binding.tvCategory.setBackgroundResource(_root_ide_package_.com.pbl.grandmarket_android.R.drawable.bg_item_list_meat)
+                    binding.tvCategory.setBackgroundResource(com.pbl.grandmarket_android.R.drawable.bg_item_list_meat)
                 }
             }
 
