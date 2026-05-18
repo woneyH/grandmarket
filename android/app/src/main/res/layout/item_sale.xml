@@ -105,27 +105,12 @@
                 android:textColor="#E8821A"
                 android:layout_marginBottom="5dp" />
 
-            <!-- 재고 · 날짜 -->
+            <!-- 날짜 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/tvStock"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="재고 32개"
-                    android:textSize="10sp"
-                    android:textColor="#BBBBA8" />
-
-                <View
-                    android:layout_width="2dp"
-                    android:layout_height="2dp"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginEnd="5dp"
-                    android:background="#D4C9B0" />
 
                 <TextView
                     android:id="@+id/tvDate"
@@ -139,15 +124,51 @@
 
         </LinearLayout>
 
-        <!-- ── 더보기 버튼 ── -->
-        <ImageButton
-            android:id="@+id/btnMore"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="top"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/item_list_more_vert"
-            android:contentDescription="더보기" />
+        <LinearLayout
+            android:id="@+id/layoutActionButtons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnComplete"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:minWidth="86dp"
+                android:minHeight="48dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:background="@drawable/bg_item_action_complete"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="판매 완료"
+                android:textColor="#E8821A"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:contentDescription="판매완료" />
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="6dp"
+                android:minWidth="86dp"
+                android:minHeight="48dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:background="@drawable/bg_item_action_delete"
+                android:backgroundTint="@null"
+                app:backgroundTint="@null"
+                android:text="상품 삭제"
+                android:textColor="#B71C1C"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:contentDescription="식자재 삭제" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
