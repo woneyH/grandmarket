@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
 import android.util.Log
+import android.util.Size
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -32,16 +33,30 @@ class ScannerActivity : AppCompatActivity() {
 
     private lateinit var btnGallery: Button
 
+    // ONNX 모델은 PyTorch보다 confidence가 낮게 나오므로 threshold를 낮춤
+    companion object {
+        private const val TAG = "ScannerActivity"
+        private const val UI_CONFIDENCE_THRESHOLD = 0.4f
+        private const val REQUEST_CODE_PERMISSIONS = 10
+        private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
+    }
+
     private val galleryLauncher = registerForActivityResult(androidx.activity.result.contract.ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
-            val bitmap = android.provider.MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+            var bitmap = android.provider.MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+
+            // ARGB_8888로 변환하여 색상 정보 손실 방지
+            if (bitmap.config != Bitmap.Config.ARGB_8888) {
+                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false)
+            }
+
             val results = yoloDetector.detect(bitmap)
             
             overlay.setResults(results, bitmap.width, bitmap.height)
             
             if (results.isNotEmpty()) {
                 val best = results.maxByOrNull { it.confidence }
-                if (best != null && best.confidence > 0.6f) {
+                if (best != null && best.confidence > UI_CONFIDENCE_THRESHOLD) {
                     highestConfidenceClass = best.className
                     tvDetectedInfo.text = "앨범 사진 인식됨: ${best.className} (${(best.confidence * 100).toInt()}%)"
                     btnRegister.visibility = View.VISIBLE
@@ -108,11 +123,6 @@ class ScannerActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val REQUEST_CODE_PERMISSIONS = 10
-        private val REQUIRED_PERMISSIONS = arrayOf(android.Manifest.permission.CAMERA)
-    }
-
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -125,7 +135,9 @@ class ScannerActivity : AppCompatActivity() {
                     it.setSurfaceProvider(viewFinder.surfaceProvider)
                 }
 
+            // 카메라 해상도를 명시적으로 지정하여 안정적인 입력 보장
             val imageAnalyzer = ImageAnalysis.Builder()
+                .setTargetResolution(Size(640, 480))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
                 .also {
@@ -144,7 +156,7 @@ class ScannerActivity : AppCompatActivity() {
                     this, anyCameraSelector, preview, imageAnalyzer
                 )
             } catch (exc: Exception) {
-                Log.e("ScannerActivity", "All cameras failed", exc)
+                Log.e(TAG, "All cameras failed", exc)
                 runOnUiThread {
                     tvDetectedInfo.text = "가상기기 카메라 에러: ${exc.message}"
                 }
@@ -157,25 +169,34 @@ class ScannerActivity : AppCompatActivity() {
     private fun processImageProxy(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
-            val bitmap = imageProxy.toBitmap()
-            
-            // Fix rotation if needed
-            val rotationDegrees = imageProxy.imageInfo.rotationDegrees
-            val matrix = Matrix()
-            matrix.postRotate(rotationDegrees.toFloat())
-            val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            var bitmap = imageProxy.toBitmap()
 
-            // Run inference
+            // ARGB_8888로 강제 변환 (색상 정보 손실 방지)
+            if (bitmap.config != Bitmap.Config.ARGB_8888) {
+                bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, false)
+            }
+            
+            // 회전 보정
+            val rotationDegrees = imageProxy.imageInfo.rotationDegrees
+            val rotatedBitmap = if (rotationDegrees != 0) {
+                val matrix = Matrix()
+                matrix.postRotate(rotationDegrees.toFloat())
+                Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+            } else {
+                bitmap
+            }
+
+            // AI 추론
             val results = yoloDetector.detect(rotatedBitmap)
 
-            // Update UI on main thread
+            // UI 업데이트 (메인 스레드)
             runOnUiThread {
                 overlay.setResults(results, rotatedBitmap.width, rotatedBitmap.height)
                 
                 if (results.isNotEmpty()) {
-                    // Find highest confidence
+                    // 가장 높은 confidence 결과 찾기
                     val best = results.maxByOrNull { it.confidence }
-                    if (best != null && best.confidence > 0.6f) {
+                    if (best != null && best.confidence > UI_CONFIDENCE_THRESHOLD) {
                         highestConfidenceClass = best.className
                         tvDetectedInfo.text = "인식됨: ${best.className} (${(best.confidence * 100).toInt()}%)"
                         btnRegister.visibility = View.VISIBLE

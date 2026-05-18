@@ -16,7 +16,7 @@ class YoloDetector(context: Context) {
     private val env = OrtEnvironment.getEnvironment()
     private var session: OrtSession? = null
 
-    // 28 classes
+    // 28 classes (순서는 학습 시 사용한 클래스 순서와 동일해야 함)
     val classNames = arrayOf(
         "아보카도", "콩", "비트", "피망", "브로콜리", "방울양배추",
         "배추", "당근", "콜리플라워", "샐러리", "옥수수", "오이",
@@ -25,14 +25,34 @@ class YoloDetector(context: Context) {
         "토마토", "애호박", "두부", "생선"
     )
 
+    companion object {
+        private const val TAG = "YoloDetector"
+        private const val INPUT_SIZE = 640
+        // Ultralytics 기본 letterbox 패딩 색상: 114/255 ≈ 0.447
+        private const val LETTERBOX_PAD_VALUE = 114f / 255f
+        // ONNX 모델은 PyTorch보다 confidence가 낮게 나오므로 threshold를 낮춤
+        private const val CONFIDENCE_THRESHOLD = 0.25f
+        private const val NMS_IOU_THRESHOLD = 0.45f
+    }
+
     init {
         try {
             val modelBytes = context.assets.open("expanded_28classes.onnx").readBytes()
             val options = OrtSession.SessionOptions()
             session = env.createSession(modelBytes, options)
-            Log.d("YoloDetector", "ONNX Model loaded successfully")
+            Log.d(TAG, "ONNX Model loaded successfully")
+
+            // 모델 입출력 shape 로그 출력
+            session?.let { s ->
+                s.inputInfo.forEach { (name, info) ->
+                    Log.d(TAG, "Input: $name -> ${info.info}")
+                }
+                s.outputInfo.forEach { (name, info) ->
+                    Log.d(TAG, "Output: $name -> ${info.info}")
+                }
+            }
         } catch (e: Exception) {
-            Log.e("YoloDetector", "Failed to load ONNX model", e)
+            Log.e(TAG, "Failed to load ONNX model", e)
         }
     }
 
@@ -46,25 +66,33 @@ class YoloDetector(context: Context) {
     fun detect(bitmap: Bitmap): List<Detection> {
         val s = session ?: return emptyList()
 
-        // 1. Resize and pad image to 640x640 (Letterbox)
-        val inputSize = 640
-        val scale = min(inputSize.toFloat() / bitmap.width, inputSize.toFloat() / bitmap.height)
-        val newW = Math.round(bitmap.width * scale)
-        val newH = Math.round(bitmap.height * scale)
-        val scaledBitmap = Bitmap.createScaledBitmap(bitmap, newW, newH, true)
+        // Bitmap을 ARGB_8888로 강제 변환 (RGB_565 등에서 색상 손실 방지)
+        val argbBitmap = if (bitmap.config != Bitmap.Config.ARGB_8888) {
+            bitmap.copy(Bitmap.Config.ARGB_8888, false)
+        } else {
+            bitmap
+        }
 
-        val padW = (inputSize - newW) / 2
-        val padH = (inputSize - newH) / 2
+        // 1. Letterbox 리사이즈 (비율 유지 + 패딩)
+        val scale = min(INPUT_SIZE.toFloat() / argbBitmap.width, INPUT_SIZE.toFloat() / argbBitmap.height)
+        val newW = Math.round(argbBitmap.width * scale)
+        val newH = Math.round(argbBitmap.height * scale)
+        val scaledBitmap = Bitmap.createScaledBitmap(argbBitmap, newW, newH, true)
 
-        // 2. Convert to FloatBuffer [1, 3, 640, 640]
-        val floatBuffer = FloatBuffer.allocate(3 * inputSize * inputSize)
+        val padW = (INPUT_SIZE - newW) / 2
+        val padH = (INPUT_SIZE - newH) / 2
+
+        // 2. FloatBuffer 생성 [1, 3, 640, 640] — Ultralytics와 동일한 전처리
+        val floatBuffer = FloatBuffer.allocate(3 * INPUT_SIZE * INPUT_SIZE)
         val pixels = IntArray(newW * newH)
         scaledBitmap.getPixels(pixels, 0, newW, 0, 0, newW, newH)
 
-        for (i in 0 until 3 * inputSize * inputSize) {
-            floatBuffer.put(i, 0.5f) // Initialize with padding color (gray/0.5)
+        // 패딩 영역을 Ultralytics 기본 색상(114/255)으로 초기화
+        for (i in 0 until 3 * INPUT_SIZE * INPUT_SIZE) {
+            floatBuffer.put(i, LETTERBOX_PAD_VALUE)
         }
 
+        // 실제 이미지 픽셀을 RGB 순서로 채움 (Bitmap ARGB → RGB 정규화)
         var pixelIndex = 0
         for (y in 0 until newH) {
             for (x in 0 until newW) {
@@ -76,73 +104,86 @@ class YoloDetector(context: Context) {
                 val destY = y + padH
                 val destX = x + padW
 
-                floatBuffer.put(0 * inputSize * inputSize + destY * inputSize + destX, r)
-                floatBuffer.put(1 * inputSize * inputSize + destY * inputSize + destX, g)
-                floatBuffer.put(2 * inputSize * inputSize + destY * inputSize + destX, b)
+                floatBuffer.put(0 * INPUT_SIZE * INPUT_SIZE + destY * INPUT_SIZE + destX, r)
+                floatBuffer.put(1 * INPUT_SIZE * INPUT_SIZE + destY * INPUT_SIZE + destX, g)
+                floatBuffer.put(2 * INPUT_SIZE * INPUT_SIZE + destY * INPUT_SIZE + destX, b)
             }
         }
         floatBuffer.rewind()
 
-        // 3. Inference
+        // 3. ONNX 추론
         val inputName = s.inputNames.iterator().next()
-        val shape = longArrayOf(1, 3, inputSize.toLong(), inputSize.toLong())
-        
+        val shape = longArrayOf(1, 3, INPUT_SIZE.toLong(), INPUT_SIZE.toLong())
+
         try {
             val tensor = OnnxTensor.createTensor(env, floatBuffer, shape)
             val output = s.run(Collections.singletonMap(inputName, tensor))
             val resultTensor = output[0] as OnnxTensor
             val resultData = resultTensor.floatBuffer
-            
-            // Output shape is [1, 32, 8400]
-            val numBoxes = 8400
-            val numClasses = 28
+
+            // 출력 shape를 런타임에서 동적으로 읽기 (하드코딩 제거)
+            val outputShape = resultTensor.info.shape  // [1, numChannels, numBoxes]
+            val numChannels = outputShape[1].toInt()    // 4(bbox) + numClasses
+            val numBoxes = outputShape[2].toInt()       // 보통 8400
+            val numClasses = numChannels - 4            // 28
+
+            Log.d(TAG, "Output shape: [1, $numChannels, $numBoxes], classes=$numClasses")
+
             val detections = mutableListOf<Detection>()
 
-            // 4. Parse results
+            // 4. 결과 파싱: shape [1, numChannels, numBoxes]
             for (i in 0 until numBoxes) {
                 var maxConf = 0f
                 var maxClassIndex = -1
 
+                // 각 박스에 대해 모든 클래스의 confidence 확인
                 for (c in 0 until numClasses) {
-                    val conf = resultData.get(0 * 32 * numBoxes + (4 + c) * numBoxes + i)
+                    val conf = resultData.get((4 + c) * numBoxes + i)
                     if (conf > maxConf) {
                         maxConf = conf
                         maxClassIndex = c
                     }
                 }
 
-                if (maxConf > 0.5f) { // Confidence threshold
-                    val cx = resultData.get(0 * 32 * numBoxes + 0 * numBoxes + i)
-                    val cy = resultData.get(0 * 32 * numBoxes + 1 * numBoxes + i)
-                    val w = resultData.get(0 * 32 * numBoxes + 2 * numBoxes + i)
-                    val h = resultData.get(0 * 32 * numBoxes + 3 * numBoxes + i)
+                if (maxConf > CONFIDENCE_THRESHOLD) {
+                    // cx, cy, w, h 추출
+                    val cx = resultData.get(0 * numBoxes + i)
+                    val cy = resultData.get(1 * numBoxes + i)
+                    val w = resultData.get(2 * numBoxes + i)
+                    val h = resultData.get(3 * numBoxes + i)
 
-                    // Convert letterbox coords back to original image coords
+                    // Letterbox 좌표 → 원본 이미지 좌표로 역변환
                     val x1 = ((cx - w / 2) - padW) / scale
                     val y1 = ((cy - h / 2) - padH) / scale
                     val x2 = ((cx + w / 2) - padW) / scale
                     val y2 = ((cy + h / 2) - padH) / scale
 
-                    detections.add(
-                        Detection(
-                            className = classNames[maxClassIndex],
-                            confidence = maxConf,
-                            x1 = max(0f, x1),
-                            y1 = max(0f, y1),
-                            x2 = min(bitmap.width.toFloat(), x2),
-                            y2 = min(bitmap.height.toFloat(), y2)
+                    if (maxClassIndex in classNames.indices) {
+                        detections.add(
+                            Detection(
+                                className = classNames[maxClassIndex],
+                                confidence = maxConf,
+                                x1 = max(0f, x1),
+                                y1 = max(0f, y1),
+                                x2 = min(argbBitmap.width.toFloat(), x2),
+                                y2 = min(argbBitmap.height.toFloat(), y2)
+                            )
                         )
-                    )
+                    }
                 }
             }
             tensor.close()
             output.close()
 
+            Log.d(TAG, "Detected ${detections.size} objects (before NMS)")
+
             // 5. NMS (Non-Maximum Suppression)
-            return applyNMS(detections, 0.45f)
+            val nmsResults = applyNMS(detections, NMS_IOU_THRESHOLD)
+            Log.d(TAG, "After NMS: ${nmsResults.size} objects")
+            return nmsResults
 
         } catch (e: Exception) {
-            Log.e("YoloDetector", "Inference error", e)
+            Log.e(TAG, "Inference error", e)
             return emptyList()
         }
     }
