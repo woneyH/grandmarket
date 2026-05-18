@@ -92,21 +92,6 @@
                 android:textColor="@drawable/bg_item_list_text_selector" />
 
             <RadioButton
-                android:id="@+id/rbReserved"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="6dp"
-                android:text="예약중"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:button="@null"
-                android:background="@drawable/bg_item_list_tap_selector"
-                android:textColor="@drawable/bg_item_list_text_selector" />
-
-            <RadioButton
                 android:id="@+id/rbSoldOut"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
@@ -151,10 +136,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="📦"
+            android:text="🥕🥔"
             android:textSize="52sp" />
 
         <TextView
+            android:id="@+id/tvEmptyItemMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -164,6 +150,7 @@
             android:textColor="#BBBBA8" />
 
         <TextView
+            android:id="@+id/tvEmptyItemMessage2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"

@@ -3,6 +3,7 @@ package com.pbl.grandmarket_android.ui.adapter
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -28,10 +29,9 @@ enum class ProductCategory {
 }
 
 enum class SaleStatus {
-    ALL, ON_SALE, RESERVED, SOLD_OUT
+    ALL, ON_SALE, SOLD_OUT
 }
 
-// ── DiffUtil ───────────────────────────────────────────
 
 class SaleItemDiffCallback : DiffUtil.ItemCallback<SaleItem>() {
     override fun areItemsTheSame(oldItem: SaleItem, newItem: SaleItem) =
@@ -40,11 +40,11 @@ class SaleItemDiffCallback : DiffUtil.ItemCallback<SaleItem>() {
         oldItem == newItem
 }
 
-// ── Adapter ────────────────────────────────────────────
-
 class SalesAdapter(
     private val onItemClick: (SaleItem) -> Unit,
-    private val onMoreClick: (SaleItem) -> Unit
+    private val onDeleteClick: (SaleItem) -> Unit,
+    private val onCompleteClick: (SaleItem) -> Unit,
+    private val isEditable: Boolean = true
 ) : ListAdapter<SaleItem, SalesAdapter.SaleViewHolder>(SaleItemDiffCallback()) {
 
     inner class SaleViewHolder(
@@ -53,10 +53,9 @@ class SalesAdapter(
 
         fun bind(item: SaleItem) {
 
-            // 상품명 / 가격 / 재고 / 날짜
+            // 상품명 / 가격 / 날짜
             binding.tvProductName.text = item.title
             binding.tvPrice.text       = "%,d원".format(item.price)
-            binding.tvStock.text       = "재고 ${item.stockCount}개"
             binding.tvDate.text        = formatRelativeTime(item.createdAt)
 
             // 카테고리 태그
@@ -76,7 +75,6 @@ class SalesAdapter(
             // 상태 dot 색상 + 텍스트
             val (dotColor, statusText, statusTextColor) = when (item.status) {
                 SaleStatus.ON_SALE  -> Triple("#52B788", "판매중",  "#2D6A4F")
-                SaleStatus.RESERVED -> Triple("#F4A261", "예약중",  "#C05E00")
                 SaleStatus.SOLD_OUT -> Triple("#BDBDBD", "판매완료", "#9E9E9E")
                 SaleStatus.ALL      -> Triple("#BDBDBD", "",        "#9E9E9E")
             }
@@ -92,7 +90,20 @@ class SalesAdapter(
             //     .into(binding.ivProductImage)
 
             binding.root.setOnClickListener { onItemClick(item) }
-            binding.btnMore.setOnClickListener { onMoreClick(item) }
+            binding.layoutActionButtons.visibility = if (isEditable) View.VISIBLE else View.GONE
+            val canComplete = item.status != SaleStatus.SOLD_OUT
+            binding.btnComplete.isEnabled = canComplete
+            binding.btnComplete.alpha = if (canComplete) 1f else 0.45f
+
+            if (isEditable) {
+                binding.btnDelete.setOnClickListener { onDeleteClick(item) }
+                binding.btnComplete.setOnClickListener {
+                    if (canComplete) onCompleteClick(item)
+                }
+            } else {
+                binding.btnDelete.setOnClickListener(null)
+                binding.btnComplete.setOnClickListener(null)
+            }
         }
 
         private fun formatRelativeTime(timestamp: Long): String {
