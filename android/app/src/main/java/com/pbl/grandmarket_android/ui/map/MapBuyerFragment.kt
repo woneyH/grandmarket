@@ -208,7 +208,7 @@ class MapBuyerFragment : Fragment() {
 
             val style = LabelStyles.from(
                 LabelStyle.from(R.drawable.store_marker)
-                    .setTextStyles(18, ContextCompat.getColor(requireContext(), R.color.black))
+                    .setTextStyles(21, ContextCompat.getColor(requireContext(), R.color.black))
             )
 
             val registeredStyle = labelManager.addLabelStyles(style)
