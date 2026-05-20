@@ -18,6 +18,30 @@ data class SellerFoodItem(
 class FoodRepository {
     private val db = FirebaseFirestore.getInstance()
 
+    // 점포 등록 여부만 확인하는 전용 함수 (AI 인식 후 등록 유도에 사용)
+    fun checkStoreExists(onResult: (isExists: Boolean, message: String?) -> Unit) {
+        UserApiClient.instance.me { user, error ->
+            if (error != null || user == null) {
+                onResult(false, "사용자 정보를 불러오지 못했습니다")
+                return@me
+            }
+
+            val kakaoId = user.id.toString()
+            db.collection("storeLocation").document(kakaoId).get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        onResult(true, null)
+                    } else {
+                        onResult(false, "점포를 먼저 등록해주세요")
+                    }
+                }
+                .addOnFailureListener { error ->
+                    Log.d("FoodRepository", "점포 확인 에러 (네트워크)")
+                    onResult(false, "네트워크 오류 발생")
+                }
+        }
+    }
+
     fun foodAddWithValidation(
         foodName: String,
         price: Long,

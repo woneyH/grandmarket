@@ -28,7 +28,7 @@ import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
 import com.pbl.grandmarket_android.util.KakaoMapSupport
-import com.pbl.grandmarket_android.data.repository.StoreLocation
+import com.pbl.grandmarket_android.data.model.StoreLocation
 import com.pbl.grandmarket_android.databinding.FragmentMapSellerBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -244,6 +244,7 @@ class MapSellerFragment : Fragment() {
                         nickname = nickname,
                         latitude = lat,
                         longitude = lng,
+                        viewCount = 0,
                         address = address
                     )
 

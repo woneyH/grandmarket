@@ -84,16 +84,24 @@ class HomeActivity : BaseActivity() {
         homeBinding.textMySellInfo.setTextColor(if (index == 1) activeColor else defaultColor)
         homeBinding.textMap.setTextColor(if (index == 2) activeColor else defaultColor)
         homeBinding.textMyInfo.setTextColor(if (index == 3) activeColor else defaultColor)
-        
+
         // 텍스트 스타일 변경 (Bold 여부)
-        homeBinding.textHome.setTypeface(null, if(index==0)
-        Typeface.BOLD else Typeface.NORMAL)
-        homeBinding.textMySellInfo.setTypeface(null, if(index==1)
-            Typeface.BOLD else Typeface.NORMAL)
-        homeBinding.textMap.setTypeface(null, if(index==2)
-            Typeface.BOLD else Typeface.NORMAL)
-        homeBinding.textMyInfo.setTypeface(null, if(index==3)
-            Typeface.BOLD else Typeface.NORMAL)
+        homeBinding.textHome.setTypeface(
+            null, if (index == 0)
+                Typeface.BOLD else Typeface.NORMAL
+        )
+        homeBinding.textMySellInfo.setTypeface(
+            null, if (index == 1)
+                Typeface.BOLD else Typeface.NORMAL
+        )
+        homeBinding.textMap.setTypeface(
+            null, if (index == 2)
+                Typeface.BOLD else Typeface.NORMAL
+        )
+        homeBinding.textMyInfo.setTypeface(
+            null, if (index == 3)
+                Typeface.BOLD else Typeface.NORMAL
+        )
     }
 
     private val onBackPressCallback = object : OnBackPressedCallback(true) {
