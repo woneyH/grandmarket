@@ -7,7 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import com.pbl.grandmarket_android.aiimport.YoloDetector
+import com.pbl.grandmarket_android.ai.YoloDetector
 
 class OverlayView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     private val paint = Paint().apply {
