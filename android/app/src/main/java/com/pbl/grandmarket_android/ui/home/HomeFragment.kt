@@ -23,9 +23,10 @@ import com.kakao.sdk.user.UserApiClient
 import android.graphics.Matrix
 import android.media.ExifInterface
 import com.pbl.grandmarket_android.R
-import com.pbl.grandmarket_android.aiimport.YoloDetector
+import com.pbl.grandmarket_android.ai.YoloDetector
 import com.pbl.grandmarket_android.data.model.UserRole
 import com.pbl.grandmarket_android.data.local.UserSession
+import com.pbl.grandmarket_android.data.repository.FoodRepository
 import com.pbl.grandmarket_android.ui.item_list.RegisterItemBottomSheet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,12 +44,11 @@ class HomeFragment : Fragment() {
     private var btnCameraRegister: View? = null
 
     private lateinit var yoloDetector: YoloDetector
+    private val foodRepository = FoodRepository() // AI 인식 후 점포 유무 확인에 사용
 
-    // 고해상도 사진을 위한 변수들
     private var photoUri: Uri? = null
     private var currentPhotoPath: String? = null
 
-    // 1. 카메라 권한 요청 런처
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
@@ -58,15 +58,12 @@ class HomeFragment : Fragment() {
             }
         }
 
-    // 2. 카메라 촬영 결과 처리 런처 (고해상도 파일 읽기)
     private val takePictureLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == android.app.Activity.RESULT_OK) {
                 currentPhotoPath?.let { path ->
-                    // 1. 이미지 읽기
                     var bitmap = BitmapFactory.decodeFile(path)
-                    
-                    // 2. 사진 회전 각도 확인 및 보정 (추가된 로직)
+
                     bitmap = rotateImageIfRequired(bitmap, path)
                     
                     bitmap?.let {
@@ -93,7 +90,7 @@ class HomeFragment : Fragment() {
         val matrix = Matrix()
         matrix.postRotate(degree)
         val rotatedImg = Bitmap.createBitmap(img, 0, 0, img.width, img.height, matrix, true)
-        if (rotatedImg != img) img.recycle() // 원본 비트맵 메모리 해제
+        if (rotatedImg != img) img.recycle()
         return rotatedImg
     }
 
@@ -169,8 +166,16 @@ class HomeFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if (results.isNotEmpty()) {
                     val topResult = results[0]
-                    // 사용자 요청대로 인식 결과만 토스트로 출력
                     Toast.makeText(requireContext(), "인식 결과: ${topResult.className}", Toast.LENGTH_SHORT).show()
+
+                    // 점포가 등록된 사용자만 식자재 등록 BottomSheet를 띄움
+                    foodRepository.checkStoreExists { isExists, message ->
+                        if (isExists) {
+                            showRegisterBottomSheet(topResult.className)
+                        } else {
+                            Toast.makeText(requireContext(), message ?: "점포를 먼저 등록해주세요.", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
                     Toast.makeText(requireContext(), "인식된 채소가 없습니다. 다시 찍어주세요.", Toast.LENGTH_SHORT).show()
                 }
@@ -178,8 +183,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showRegisterBottomSheet() {
-        val bottomSheet = RegisterItemBottomSheet()
+    private fun showRegisterBottomSheet(initialItemName: String? = null) {
+        // AI 인식 결과가 있으면 기본 검색어로 전달
+        val bottomSheet = RegisterItemBottomSheet.newInstance(initialItemName)
         bottomSheet.show(childFragmentManager, "RegisterItemBottomSheet")
     }
 

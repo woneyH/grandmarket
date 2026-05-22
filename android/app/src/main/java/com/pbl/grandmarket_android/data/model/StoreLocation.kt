@@ -1,6 +1,4 @@
-package com.pbl.grandmarket_android.data.repository
-
-import com.google.firebase.Timestamp
+package com.pbl.grandmarket_android.data.model
 
 data class StoreLocation (
     val kakaoId: Long? = null,
@@ -8,5 +6,6 @@ data class StoreLocation (
     val latitude: Double? = null,
     val longitude: Double? = null,
     val address: String? = null,
+    val viewCount: Int? = null,
     val timestamp: Long = System.currentTimeMillis()
 )

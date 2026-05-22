@@ -198,7 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="사진을 찍어 식자재를 빠르게 등록"
+                            android:text="AI 이미지 인식으로 식자재를 빠르게 등록"
                             android:textColor="#BBBBA8"
                             android:textSize="12sp" />
 
