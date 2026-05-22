@@ -15,6 +15,7 @@ import com.pbl.grandmarket_android.R
 import com.pbl.grandmarket_android.data.remote.ApiProductService
 import com.pbl.grandmarket_android.data.repository.FoodRepository
 import kotlinx.coroutines.launch
+import okhttp3.internal.userAgent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -42,7 +43,11 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
         initialItemName = arguments?.getString(ARG_ITEM_NAME)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.bottom_sheet_item_add, container, false)
     }
 
@@ -75,8 +80,9 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
         btnSearch.setOnClickListener {
             val itemName = etSearchItem.text.toString()
 
-            val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(etSearchItem.windowToken,0)
+            val imm =
+                requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(etSearchItem.windowToken, 0)
 
             if (itemName.isNotEmpty()) {
                 tvWholesalePriceInfo.text = "조회 중..."
@@ -85,7 +91,8 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
                         val response = api.getAveragePrice(itemName)
                         if (response.isSuccessful) {
                             currentWholesalePrice = response.body() ?: 0L
-                            tvWholesalePriceInfo.text = "오늘의 $itemName 도매가: ${currentWholesalePrice}원"
+                            tvWholesalePriceInfo.text =
+                                "오늘의 $itemName 도매가: ${currentWholesalePrice}원"
                             etSellPrice.setText(currentWholesalePrice.toString()) // 초기 가격 세팅
                         } else {
                             tvWholesalePriceInfo.text = "도매가 정보를 찾을 수 없습니다."
@@ -122,7 +129,11 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
 
                 // Repository 호출
                 val repository = FoodRepository()
-                repository.foodAddWithValidation(name, sellPrice, currentWholesalePrice) { isSuccess, message ->
+                repository.foodAddWithValidation(
+                    name,
+                    sellPrice,
+                    currentWholesalePrice
+                ) { isSuccess, message ->
 
                     // 결과가 돌아오면 UI 복구
                     btnRegisterComplete.isEnabled = true
