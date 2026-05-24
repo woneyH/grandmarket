@@ -15,6 +15,7 @@ import com.pbl.grandmarket_android.R
 import com.pbl.grandmarket_android.data.remote.ApiProductService
 import com.pbl.grandmarket_android.data.repository.FoodRepository
 import kotlinx.coroutines.launch
+import okhttp3.internal.userAgent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -22,8 +23,31 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var api: ApiProductService
     private var currentWholesalePrice = 0L // 불러온 도매가 저장용
+    private var initialItemName: String? = null // AI 인식 결과로 전달된 기본 식자재명
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    companion object {
+        private const val ARG_ITEM_NAME = "arg_item_name"
+
+        // AI 인식 결과를 기본 검색어로 전달하기 위한 팩토리 메서드
+        fun newInstance(itemName: String?): RegisterItemBottomSheet {
+            val fragment = RegisterItemBottomSheet()
+            fragment.arguments = Bundle().apply {
+                putString(ARG_ITEM_NAME, itemName)
+            }
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initialItemName = arguments?.getString(ARG_ITEM_NAME)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.bottom_sheet_item_add, container, false)
     }
 
@@ -39,6 +63,12 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
         val btnPlusPrice = view.findViewById<Button>(R.id.btnPlusPrice)
         val btnRegisterComplete = view.findViewById<Button>(R.id.btnRegisterComplete)
 
+        // AI 인식 결과가 있으면 자동으로 검색어를 채워줌
+        initialItemName?.takeIf { it.isNotBlank() }?.let { itemName ->
+            etSearchItem.setText(itemName)
+            btnSearch.performClick()
+        }
+
         // API 세팅
         val retrofit = Retrofit.Builder()
             .baseUrl(com.pbl.grandmarket_android.BuildConfig.SERVER_IP)
@@ -50,8 +80,9 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
         btnSearch.setOnClickListener {
             val itemName = etSearchItem.text.toString()
 
-            val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(etSearchItem.windowToken,0)
+            val imm =
+                requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(etSearchItem.windowToken, 0)
 
             if (itemName.isNotEmpty()) {
                 tvWholesalePriceInfo.text = "조회 중..."
@@ -60,7 +91,8 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
                         val response = api.getAveragePrice(itemName)
                         if (response.isSuccessful) {
                             currentWholesalePrice = response.body() ?: 0L
-                            tvWholesalePriceInfo.text = "오늘의 $itemName 도매가: ${currentWholesalePrice}원"
+                            tvWholesalePriceInfo.text =
+                                "오늘의 $itemName 도매가: ${currentWholesalePrice}원"
                             etSellPrice.setText(currentWholesalePrice.toString()) // 초기 가격 세팅
                         } else {
                             tvWholesalePriceInfo.text = "도매가 정보를 찾을 수 없습니다."
@@ -95,21 +127,23 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
                 btnRegisterComplete.isEnabled = false
                 btnRegisterComplete.text = "등록 중..."
 
-                // Repository 호출 (콜백 함수 전달)
+                // Repository 호출
                 val repository = FoodRepository()
-                repository.foodAddWithValidation(name, sellPrice, currentWholesalePrice) { isSuccess, message ->
+                repository.foodAddWithValidation(
+                    name,
+                    sellPrice,
+                    currentWholesalePrice
+                ) { isSuccess, message ->
 
                     // 결과가 돌아오면 UI 복구
                     btnRegisterComplete.isEnabled = true
                     btnRegisterComplete.text = "내 점포에 상품 등록하기"
 
-                    // 콜백 결과(진동벨)에 따른 처리
                     if (isSuccess) {
                         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-                        dismiss() // 팝업창 닫기
+                        dismiss()
                     } else {
                         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-                        // 실패 시에는 창을 닫지 않고 사용자가 다시 시도하거나 정보를 수정할 수 있게 둡니다.
                     }
                 }
             } else {

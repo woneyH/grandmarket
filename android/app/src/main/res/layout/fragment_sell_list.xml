@@ -14,9 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#E8821A"
-        app:elevation="0dp">
+        app:elevation="0dp"
+        android:stateListAnimator="@null"
+        app:liftOnScroll="false">
 
-        <!-- 타이틀 + 상품 수 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -46,11 +47,7 @@
         </LinearLayout>
 
         <!-- ── 필터 탭 (RadioGroup 스타일) ── -->
-        <!--
-            Chip 커스텀 스타일 없이 RadioGroup + RadioButton으로 구현.
-            선택 상태는 코드에서 setOnCheckedChangeListener로 처리.
-        -->
-        <RadioGroup
+         <RadioGroup
             android:id="@+id/rgFilter"
             android:layout_width="match_parent"
             android:layout_height="44dp"
@@ -160,7 +157,7 @@
 
     </LinearLayout>
 
-    <!-- ════════════════════════════
+    <!-- ═══════════════════════════
          상품 등록 FAB
     ════════════════════════════ -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
