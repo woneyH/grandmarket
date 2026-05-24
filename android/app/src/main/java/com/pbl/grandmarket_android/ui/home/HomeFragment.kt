@@ -27,7 +27,9 @@ import com.pbl.grandmarket_android.ai.YoloDetector
 import com.pbl.grandmarket_android.data.model.UserRole
 import com.pbl.grandmarket_android.data.local.UserSession
 import com.pbl.grandmarket_android.data.repository.FoodRepository
+import com.pbl.grandmarket_android.ui.item_list.BuyerSearchBottomSheet
 import com.pbl.grandmarket_android.ui.item_list.RegisterItemBottomSheet
+import com.pbl.grandmarket_android.ui.item_list.SellListFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,6 +44,8 @@ class HomeFragment : Fragment() {
     private var btnSearchRegister: View? = null
     private var homeSearchBar: View? = null
     private var btnCameraRegister: View? = null
+    private var btnBuyerSearch: View? = null
+    private var cardBuyerSearch: View? = null
 
     private lateinit var yoloDetector: YoloDetector
     private val foodRepository = FoodRepository() // AI 인식 후 점포 유무 확인에 사용
@@ -108,6 +112,9 @@ class HomeFragment : Fragment() {
             btnSearchRegister = view.findViewById(R.id.btnSearchRegister)
             homeSearchBar = view.findViewById(R.id.home_search_bar)
             btnCameraRegister = view.findViewById(R.id.btnCameraRegister)
+        } else {
+            btnBuyerSearch = view.findViewById(R.id.btnBuyerSearch)
+            cardBuyerSearch = view.findViewById(R.id.cardBuyerSearch)
         }
 
         yoloDetector = YoloDetector(requireContext())
@@ -121,6 +128,23 @@ class HomeFragment : Fragment() {
         btnSearchRegister?.setOnClickListener { showRegisterBottomSheet() }
         homeSearchBar?.setOnClickListener { showRegisterBottomSheet() }
         btnCameraRegister?.setOnClickListener { checkCameraPermission() }
+        btnBuyerSearch?.setOnClickListener { showBuyerSearchBottomSheet() }
+        cardBuyerSearch?.setOnClickListener { showBuyerSearchBottomSheet() }
+    }
+
+    private fun showBuyerSearchBottomSheet() {
+        BuyerSearchBottomSheet.newInstance()
+            .setOnSearchListener { keyword ->
+                openBuyerSellList(keyword)
+            }
+            .show(childFragmentManager, "BuyerSearchBottomSheet")
+    }
+
+    private fun openBuyerSellList(keyword: String) {
+        // 홈의 검색 버튼에서 바로 판매 목록으로 이동해 FragmentSellListBinding 화면의 목록만 필터링합니다.
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, SellListFragment.newInstance(keyword.trim()))
+            .commit()
     }
 
     private fun checkCameraPermission() {
@@ -205,5 +229,7 @@ class HomeFragment : Fragment() {
         btnSearchRegister = null
         homeSearchBar = null
         btnCameraRegister = null
+        btnBuyerSearch = null
+        cardBuyerSearch = null
     }
 }
