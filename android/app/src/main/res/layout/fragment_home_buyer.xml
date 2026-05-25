@@ -126,7 +126,9 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- 내 주변 점포 찾기: 지도 탭으로 이동 -->
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardNearbyStore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="#FFFFFF"

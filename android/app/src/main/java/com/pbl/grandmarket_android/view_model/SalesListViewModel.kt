@@ -60,7 +60,6 @@ class SalesListViewModel : ViewModel() {
     }
 
     fun filterByKeyword(keyword: String) {
-        // 구매자가 입력한 식자재명을 기존 상태 필터와 함께 적용하기 위해 검색어를 저장합니다.
         currentSearchKeyword = keyword.trim()
         applyFilter()
     }
@@ -99,7 +98,7 @@ class SalesListViewModel : ViewModel() {
             allItems.filter { it.status == currentFilter }
         }
 
-        // 검색어가 비어 있으면 전체를 보여주고, 값이 있으면 상품명에 포함되는 식자재만 남깁니다.
+        // 검색어가 비어 있으면 전체를 보여주고, 값이 있으면 상품명에 포함되는 식자재 디스플레이
         _salesList.value = if (currentSearchKeyword.isBlank()) {
             statusFilteredItems
         } else {

@@ -46,6 +46,7 @@ class HomeFragment : Fragment() {
     private var btnCameraRegister: View? = null
     private var btnBuyerSearch: View? = null
     private var cardBuyerSearch: View? = null
+    private var cardNearbyStore: View? = null
 
     private lateinit var yoloDetector: YoloDetector
     private val foodRepository = FoodRepository() // AI 인식 후 점포 유무 확인에 사용
@@ -115,6 +116,7 @@ class HomeFragment : Fragment() {
         } else {
             btnBuyerSearch = view.findViewById(R.id.btnBuyerSearch)
             cardBuyerSearch = view.findViewById(R.id.cardBuyerSearch)
+            cardNearbyStore = view.findViewById(R.id.cardNearbyStore)
         }
 
         yoloDetector = YoloDetector(requireContext())
@@ -130,6 +132,7 @@ class HomeFragment : Fragment() {
         btnCameraRegister?.setOnClickListener { checkCameraPermission() }
         btnBuyerSearch?.setOnClickListener { showBuyerSearchBottomSheet() }
         cardBuyerSearch?.setOnClickListener { showBuyerSearchBottomSheet() }
+        cardNearbyStore?.setOnClickListener { (activity as? HomeActivity)?.navigateToMap() }
     }
 
     private fun showBuyerSearchBottomSheet() {
@@ -231,5 +234,6 @@ class HomeFragment : Fragment() {
         btnCameraRegister = null
         btnBuyerSearch = null
         cardBuyerSearch = null
+        cardNearbyStore = null
     }
 }
