@@ -3,6 +3,8 @@ package com.pbl.grandmarket_android.ui.map
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.location.Geocoder
 import android.location.Location
 import android.os.Build
@@ -27,6 +29,12 @@ import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraAnimation
 import com.kakao.vectormap.camera.CameraUpdateFactory
+import com.kakao.vectormap.label.LabelLayerOptions
+import com.kakao.vectormap.label.LabelOptions
+import com.kakao.vectormap.label.LabelStyle
+import com.kakao.vectormap.label.LabelStyles
+import com.kakao.vectormap.label.LabelTextBuilder
+import com.pbl.grandmarket_android.R
 import com.pbl.grandmarket_android.util.KakaoMapSupport
 import com.pbl.grandmarket_android.data.model.StoreLocation
 import com.pbl.grandmarket_android.databinding.FragmentMapSellerBinding
@@ -201,6 +209,7 @@ class MapSellerFragment : Fragment() {
                     }
 
                     checkLocationPermission()
+                    loadMyStoreMarker() // 앱 재진입 시 기존 내 점포 마커 복원
                 }
 
                 override fun getPosition(): LatLng {
@@ -223,13 +232,21 @@ class MapSellerFragment : Fragment() {
 
     private fun setLocationRegistration() {
         binding.btnRegisterLocation.setOnClickListener {
+            binding.btnRegisterLocation.isEnabled = false
+            binding.btnRegisterLocation.text = "등록 중..."
+
             UserApiClient.Companion.instance.me { user, error ->
-                if(error != null) {
+                if (error != null) {
                     Log.e("Kakao", "사용자 정보 요청 실패", error)
+                    // 카카오 사용자 조회 실패 시 버튼 복구 + 실패 알람
+                    if (!isAdded) return@me
+                    binding.btnRegisterLocation.isEnabled = true
+                    binding.btnRegisterLocation.text = "이 위치로 등록"
+                    Toast.makeText(requireContext(), "점포 등록에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     return@me
                 }
 
-                if(user != null) {
+                if (user != null) {
                     val kakaoId = user.id
                     val nickname = user.kakaoAccount?.profile?.nickname ?: "이름 없음"
 
@@ -252,13 +269,69 @@ class MapSellerFragment : Fragment() {
                         .document(kakaoId.toString())
                         .set(storeLocation)
                         .addOnSuccessListener {
-                            Toast.makeText(requireContext(),"점포 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                            if (!isAdded) return@addOnSuccessListener
+                            //등록 성공: 버튼 복구 + 성공 알람 + 지도에 내 점포 마커 표시
+                            binding.btnRegisterLocation.isEnabled = true
+                            binding.btnRegisterLocation.text = "이 위치로 등록"
+                            Toast.makeText(requireContext(), "점포가 등록되었습니다!", Toast.LENGTH_SHORT).show()
+                            if (lat != null && lng != null) showMyStoreMarker(lat, lng)
                         }
                         .addOnFailureListener {
-                            Toast.makeText(requireContext(),"점포 등록 실패", Toast.LENGTH_SHORT).show()
+                            if (!isAdded) return@addOnFailureListener
+                            // 등록 실패: 버튼 복구 + 실패 알람
+                            binding.btnRegisterLocation.isEnabled = true
+                            binding.btnRegisterLocation.text = "이 위치로 등록"
+                            Toast.makeText(requireContext(), "점포 등록에 실패했습니다.", Toast.LENGTH_LONG).show()
                         }
                 }
             }
         }
+    }
+
+    private fun showMyStoreMarker(lat: Double, lng: Double) {
+        val labelManager = kakaoMap?.labelManager ?: return
+        try {
+            val myStoreLayer = labelManager.getLayer("myStoreLayer")
+                ?: labelManager.addLayer(LabelLayerOptions.from("myStoreLayer"))
+            myStoreLayer?.removeAll()
+
+            val markerBitmap = resizeMarkerBitmap(R.drawable.store_marker, 30)
+            val style = LabelStyles.from(
+                LabelStyle.from(markerBitmap)
+                    .setTextStyles(16, ContextCompat.getColor(requireContext(), R.color.black))
+            )
+            val registeredStyle = labelManager.addLabelStyles(style)
+
+            val options = LabelOptions.from(LatLng.from(lat, lng))
+                .setStyles(registeredStyle)
+                .setTexts(LabelTextBuilder().setTexts("내 점포"))
+
+            myStoreLayer?.addLabel(options)
+        } catch (e: Exception) {
+            Log.e("MapSeller", "내 점포 마커 표시 오류", e)
+        }
+    }
+
+    private fun loadMyStoreMarker() {
+        UserApiClient.instance.me { user, error ->
+            if (user == null) return@me
+            val kakaoId = user.id ?: return@me
+            FirebaseFirestore.getInstance()
+                .collection("storeLocation")
+                .document(kakaoId.toString())
+                .get()
+                .addOnSuccessListener { doc ->
+                    if (!isAdded) return@addOnSuccessListener
+                    val lat = doc.getDouble("latitude") ?: return@addOnSuccessListener
+                    val lng = doc.getDouble("longitude") ?: return@addOnSuccessListener
+                    showMyStoreMarker(lat, lng)
+                }
+        }
+    }
+
+    private fun resizeMarkerBitmap(resourceId: Int, sizeDp: Int): Bitmap {
+        val sizePx = (sizeDp * resources.displayMetrics.density).toInt()
+        val original = BitmapFactory.decodeResource(resources, resourceId)
+        return Bitmap.createScaledBitmap(original, sizePx, sizePx, true)
     }
 }
