@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.pbl.grandmarket_android.R
 import com.pbl.grandmarket_android.data.model.FoodEntity
 import com.pbl.grandmarket_android.data.model.StoreItem
+import com.pbl.grandmarket_android.data.repository.FoodRepository
 import com.pbl.grandmarket_android.ui.adapter.ProductCategory
 import com.pbl.grandmarket_android.ui.adapter.SaleItem
 import com.pbl.grandmarket_android.ui.adapter.SaleStatus
@@ -60,6 +61,13 @@ class StoreFoodBottomSheetFragment(
         }
 
         loadStoreFoods()
+        // 구매자가 점포 식자재 목록을 열면 해당 판매자의 storeLocation viewCount 1 증가
+        incrementSellerViewCount()
+    }
+
+    // FoodRepository를 통해 판매자 점포의 viewCount를 Firebase에서 1 증가
+    private fun incrementSellerViewCount() {
+        FoodRepository().incrementStoreViewCount(store.storeId)
     }
 
     // storeLocation 문서 id와 닉네임을 foodList의 kakaoId/sellerName과 매칭해 해당 판매자 식자재만 조회
