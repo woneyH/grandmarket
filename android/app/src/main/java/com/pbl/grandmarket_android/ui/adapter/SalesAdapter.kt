@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.pbl.grandmarket_android.databinding.ItemSaleBinding
 
-// ── 데이터 클래스 ──────────────────────────────────────
+// 데이터 클래스
 
 data class SaleItem(
     val id: String,

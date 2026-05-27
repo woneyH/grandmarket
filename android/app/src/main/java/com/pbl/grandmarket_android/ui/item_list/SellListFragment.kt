@@ -34,6 +34,7 @@ class SellListFragment: Fragment() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var salesAdapter: SalesAdapter
     private var isSellerUser = true
+    private var buyerSearchKeyword: String = ""
 
     private val buyerSearchRadiusMeter = 10_000f
 
@@ -62,9 +63,11 @@ class SellListFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         isSellerUser = UserSession.getRole(requireContext()) == UserRole.SELLER
+        buyerSearchKeyword = arguments?.getString(ARG_BUYER_SEARCH_KEYWORD).orEmpty()
 
         setupRecyclerView()
         setupFilterTabs()
+        setupBuyerSearch()
         setupFab()
         observeViewModel()
     }
@@ -101,6 +104,49 @@ class SellListFragment: Fragment() {
         }
     }
 
+    private fun setupBuyerSearch() {
+        if (isSellerUser) {
+            binding.btnBuyerSearchInList.visibility = View.GONE
+            return
+        }
+
+        // 구매자에게만 판매 목록 검색 버튼을 보여주고, 홈에서 넘어온 검색어가 있으면 먼저 적용합니다.
+        binding.btnBuyerSearchInList.visibility = View.VISIBLE
+        updateBuyerSearchButtonText()
+        viewModel.filterByKeyword(buyerSearchKeyword)
+
+        binding.btnBuyerSearchInList.setOnClickListener {
+            showBuyerSearchBottomSheet()
+        }
+    }
+
+    private fun showBuyerSearchBottomSheet() {
+        BuyerSearchBottomSheet.newInstance(
+            initialKeyword = buyerSearchKeyword,
+            showReset = buyerSearchKeyword.isNotBlank()
+        )
+            .setOnSearchListener { keyword ->
+                buyerSearchKeyword = keyword
+                viewModel.filterByKeyword(buyerSearchKeyword)
+                updateBuyerSearchButtonText()
+            }
+            .setOnResetListener {
+                buyerSearchKeyword = ""
+                viewModel.filterByKeyword("")
+                updateBuyerSearchButtonText()
+            }
+            .show(childFragmentManager, "BuyerSearchBottomSheet")
+    }
+
+    private fun updateBuyerSearchButtonText() {
+        // 현재 적용 중인 검색어를 버튼에 표시해 구매자가 필터 상태를 바로 알 수 있게 합니다.
+        binding.btnBuyerSearchInList.text = if (buyerSearchKeyword.isBlank()) {
+            "검색"
+        } else {
+            "검색: $buyerSearchKeyword"
+        }
+    }
+
 
     private fun setupFab() {
         if (!isSellerUser) {
@@ -123,9 +169,17 @@ class SellListFragment: Fragment() {
             binding.tvItemCount.text = if (isSellerUser) {
                 "등록된 상품 ${items.size}개"
             } else {
-                binding.tvEmptyItemMessage.text = "주변에 살 수 있는 식자재가 없어요!"
+                binding.tvEmptyItemMessage.text = if (buyerSearchKeyword.isBlank()) {
+                    "주변에 살 수 있는 식자재가 없어요!"
+                } else {
+                    "'$buyerSearchKeyword' 검색 결과가 없어요!"
+                }
                 binding.tvEmptyItemMessage2.text = ""
-                "주변 10km 판매 상품 ${items.size}개"
+                if (buyerSearchKeyword.isBlank()) {
+                    "주변 10km 판매 상품 ${items.size}개"
+                } else {
+                    "'$buyerSearchKeyword' 검색 결과 ${items.size}개"
+                }
             }
         }
         viewModel.errorMessage.observe(viewLifecycleOwner) { message ->
@@ -188,5 +242,18 @@ class SellListFragment: Fragment() {
                 viewModel.clearSalesList()
                 Toast.makeText(requireContext(), "현재 위치를 가져오지 못했습니다.", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    companion object {
+        private const val ARG_BUYER_SEARCH_KEYWORD = "arg_buyer_search_keyword"
+
+        fun newInstance(searchKeyword: String): SellListFragment {
+            // 구매자 홈 검색창에서 입력한 식자재명을 판매 목록 Fragment 인자로 전달합니다.
+            return SellListFragment().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_BUYER_SEARCH_KEYWORD, searchKeyword)
+                }
+            }
+        }
     }
 }
