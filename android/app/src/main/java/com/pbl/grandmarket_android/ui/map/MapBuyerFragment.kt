@@ -89,7 +89,6 @@ class MapBuyerFragment : Fragment() {
 
         // "현 위치에서 점포 검색" 버튼 클릭 이벤트
         binding.btnSearchHere.setOnClickListener {
-            // 카카오맵의 현재 화면 중앙 좌표를 가져옵니다.
             val centerPosition = kakaoMap?.cameraPosition?.position
             if (centerPosition != null) {
                 myLat = centerPosition.latitude
@@ -200,7 +199,7 @@ class MapBuyerFragment : Fragment() {
             }
     }
 
-    // 판매자 점포 마커 클릭 시 해당 판매자가 올린 식자재 바텀시트를 엽니다.
+    // 판매자 점포 마커 클릭 시 해당 판매자가 올린 식자재 바텀시트 표시
     private fun setupStoreMarkerClickListener() {
         kakaoMap?.setOnLabelClickListener { _, _, label: Label ->
             val store = label.tag as? StoreItem ?: return@setOnLabelClickListener false
@@ -211,7 +210,7 @@ class MapBuyerFragment : Fragment() {
         }
     }
 
-    // 카카오맵 앱 길찾기 열고, 앱이 없으면 웹 카카오맵 링크로 연결합니다.
+    // 카카오맵 앱 길찾기 열고, 앱이 없으면 웹 카카오맵 링크로 연결
     private fun openKakaoMapRoute(store: StoreItem) {
         val routeUri = Uri.parse(
             "kakaomap://route?sp=$myLat,$myLng&ep=${store.latitude},${store.longitude}&by=CAR"
@@ -246,7 +245,6 @@ class MapBuyerFragment : Fragment() {
                 .setStyles(registeredStyle)
                 .setTexts(labelText)
 
-            // label 클릭 리스너에서 StoreItem을 꺼낼 수 있도록 tag와 clickable을 설정합니다.
             layer?.addLabel(options)?.apply {
                 tag = store
                 isClickable = true

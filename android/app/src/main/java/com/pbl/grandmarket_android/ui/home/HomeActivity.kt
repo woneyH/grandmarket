@@ -116,6 +116,17 @@ class HomeActivity : BaseActivity() {
         }
     }
 
+    // 내 주변 점포 찾기 버튼 클릭 시 HomeFragment에서 호출 -> 지도 탭으로 전환
+    fun navigateToMap() {
+        val currentRole = UserSession.getRole(this)
+        if (currentRole == UserRole.BUYER) {
+            replaceFragment(MapBuyerFragment())
+        } else {
+            replaceFragment(MapSellerFragment())
+        }
+        updateBottomMenuUI(2)
+    }
+
     companion object {
         const val EXTRA_USER_ROLE = "extra_user_role"
     }

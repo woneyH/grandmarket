@@ -20,6 +20,7 @@ class SalesListViewModel : ViewModel() {
 
     private val allItems = mutableListOf<SaleItem>()
     private var currentFilter: SaleStatus = SaleStatus.ALL
+    private var currentSearchKeyword: String = ""
 
     fun loadSalesList() {
         repository.getSellerFoodList { isSuccess, items, message ->
@@ -58,6 +59,11 @@ class SalesListViewModel : ViewModel() {
         applyFilter()
     }
 
+    fun filterByKeyword(keyword: String) {
+        currentSearchKeyword = keyword.trim()
+        applyFilter()
+    }
+
     fun updateItemStatus(id: String, newStatus: SaleStatus) {
         repository.updateFoodStatus(id, newStatus.toFirestoreStatus()) { isSuccess, message ->
             if (!isSuccess) {
@@ -86,10 +92,19 @@ class SalesListViewModel : ViewModel() {
     }
 
     private fun applyFilter() {
-        _salesList.value = if (currentFilter == SaleStatus.ALL) {
+        val statusFilteredItems = if (currentFilter == SaleStatus.ALL) {
             allItems.toList()
         } else {
             allItems.filter { it.status == currentFilter }
+        }
+
+        // 검색어가 비어 있으면 전체를 보여주고, 값이 있으면 상품명에 포함되는 식자재 디스플레이
+        _salesList.value = if (currentSearchKeyword.isBlank()) {
+            statusFilteredItems
+        } else {
+            statusFilteredItems.filter { item ->
+                item.title.contains(currentSearchKeyword, ignoreCase = true)
+            }
         }
     }
 

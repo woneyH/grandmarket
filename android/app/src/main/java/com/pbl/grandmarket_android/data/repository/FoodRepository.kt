@@ -2,6 +2,7 @@ package com.pbl.grandmarket_android.data.repository
 
 import android.location.Location
 import android.util.Log
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.sdk.user.UserApiClient
 import com.pbl.grandmarket_android.data.model.FoodEntity
@@ -164,6 +165,51 @@ class FoodRepository {
             .addOnFailureListener { deleteError ->
                 Log.e("FoodRepository", "상품 삭제 실패", deleteError)
                 onResult(false, "상품 삭제에 실패했습니다")
+            }
+    }
+
+    // 판매자 통계 조회 - 총 판매 수, 판매완료 수, 점포 조회수를 Firebase에서 가져옴
+    fun getSellerStats(
+        onResult: (totalCount: Int, soldCount: Int, viewCount: Int) -> Unit
+    ) {
+        UserApiClient.instance.me { user, error ->
+            if (error != null || user == null) {
+                onResult(0, 0, 0)
+                return@me
+            }
+            val kakaoId = user.id.toString()
+
+            db.collection("foodList")
+                .whereEqualTo("kakaoId", kakaoId)
+                .get()
+                .addOnSuccessListener { foodSnapshot ->
+                    val totalCount = foodSnapshot.size()
+                    val soldCount = foodSnapshot.documents.count { doc ->
+                        doc.getString("status") == "판매완료"
+                    }
+
+                    db.collection("storeLocation").document(kakaoId).get()
+                        .addOnSuccessListener { storeDoc ->
+                            val viewCount = storeDoc.getLong("viewCount")?.toInt() ?: 0
+                            onResult(totalCount, soldCount, viewCount)
+                        }
+                        .addOnFailureListener {
+                            onResult(totalCount, soldCount, 0)
+                        }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("FoodRepository", "판매자 통계 조회 실패", e)
+                    onResult(0, 0, 0)
+                }
+        }
+    }
+
+    // 구매자가 점포를 조회할 때 storeLocation의 viewCount 필드를 1 증가
+    fun incrementStoreViewCount(kakaoId: String) {
+        db.collection("storeLocation").document(kakaoId)
+            .update("viewCount", FieldValue.increment(1))
+            .addOnFailureListener { e ->
+                Log.e("FoodRepository", "viewCount 업데이트 실패 kakaoId=$kakaoId", e)
             }
     }
 
