@@ -12,12 +12,17 @@ import androidx.fragment.app.Fragment
 import coil.load
 import com.kakao.sdk.user.UserApiClient
 import com.pbl.grandmarket_android.data.local.UserSession
+import com.pbl.grandmarket_android.data.model.UserRole
+import com.pbl.grandmarket_android.data.repository.FoodRepository
 import com.pbl.grandmarket_android.databinding.FragmentMyInfoBinding
 import com.pbl.grandmarket_android.ui.login.LoginActivity
 
 class MyInfoFragment : Fragment() {
     private var _binding: FragmentMyInfoBinding? = null
     private val binding get() = _binding!!
+
+    // 판매자 통계 로드를 위한 레포지토리
+    private val foodRepository = FoodRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +37,20 @@ class MyInfoFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         bindLogoutAction()
         fetchKakaoProfile()
+        // 판매자로 로그인한 경우에만 판매 통계(총 판매, 판매완료, 조회수) 로드
+        if (UserSession.getRole(requireContext()) == UserRole.SELLER) {
+            loadSellerStats()
+        }
+    }
+
+    // Firebase에서 판매자 통계 조회 후 tvSaleCount, tvActiveCount, tvViewCount에 반영
+    private fun loadSellerStats() {
+        foodRepository.getSellerStats { totalCount, soldCount, viewCount ->
+            val currentBinding = _binding ?: return@getSellerStats
+            currentBinding.tvSaleCount.text = totalCount.toString()
+            currentBinding.tvActiveCount.text = soldCount.toString()
+            currentBinding.tvViewCount.text = viewCount.toString()
+        }
     }
 
     private fun fetchKakaoProfile() {
@@ -74,8 +93,6 @@ class MyInfoFragment : Fragment() {
             // Coil 적용
             currentBinding.ivKakaoProfile.load(imageUrl) {
                 crossfade(true) // 부드럽게 나타나는 효과
-                // placeholder(R.drawable.기본_프로필_이미지) // 로딩 중 보여줄 이미지
-                // error(R.drawable.에러_이미지) // 로딩 실패 시 보여줄 이미지
                 listener(
                     onSuccess = { _, _ -> Log.d("MyInfoFragment", "Coil: 프로필 이미지 적용 완료") },
                     onError = { _, _ -> Log.e("MyInfoFragment", "Coil: 프로필 이미지 로드 실패") }
