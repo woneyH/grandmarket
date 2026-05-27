@@ -9,6 +9,9 @@ import com.pbl.grandmarket_android.ui.adapter.ProductCategory
 import com.pbl.grandmarket_android.ui.adapter.SaleItem
 import com.pbl.grandmarket_android.ui.adapter.SaleStatus
 
+// 구매자 정렬 옵션 enum
+enum class SortOrder { LATEST, PRICE_ASC, PRICE_DESC }
+
 class SalesListViewModel : ViewModel() {
     private val repository = FoodRepository()
 
@@ -21,6 +24,7 @@ class SalesListViewModel : ViewModel() {
     private val allItems = mutableListOf<SaleItem>()
     private var currentFilter: SaleStatus = SaleStatus.ALL
     private var currentSearchKeyword: String = ""
+    private var currentSortOrder: SortOrder = SortOrder.LATEST
 
     fun loadSalesList() {
         repository.getSellerFoodList { isSuccess, items, message ->
@@ -64,6 +68,11 @@ class SalesListViewModel : ViewModel() {
         applyFilter()
     }
 
+    fun sortBy(order: SortOrder) {
+        currentSortOrder = order
+        applyFilter()
+    }
+
     fun updateItemStatus(id: String, newStatus: SaleStatus) {
         repository.updateFoodStatus(id, newStatus.toFirestoreStatus()) { isSuccess, message ->
             if (!isSuccess) {
@@ -99,12 +108,19 @@ class SalesListViewModel : ViewModel() {
         }
 
         // 검색어가 비어 있으면 전체를 보여주고, 값이 있으면 상품명에 포함되는 식자재 디스플레이
-        _salesList.value = if (currentSearchKeyword.isBlank()) {
+        val keywordFilteredItems = if (currentSearchKeyword.isBlank()) {
             statusFilteredItems
         } else {
             statusFilteredItems.filter { item ->
                 item.title.contains(currentSearchKeyword, ignoreCase = true)
             }
+        }
+
+        // 구매자 정렬 적용
+        _salesList.value = when (currentSortOrder) {
+            SortOrder.LATEST     -> keywordFilteredItems.sortedByDescending { it.createdAt }
+            SortOrder.PRICE_ASC  -> keywordFilteredItems.sortedBy { it.price }
+            SortOrder.PRICE_DESC -> keywordFilteredItems.sortedByDescending { it.price }
         }
     }
 

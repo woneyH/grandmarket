@@ -61,6 +61,64 @@
                 app:iconPadding="4dp"
                 app:iconTint="#FFFFFF" />
 
+            <!-- 구매자 전용 정렬 RadioGroup -->
+            <RadioGroup
+                android:id="@+id/rgSortOrder"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:checkedButton="@+id/rbSortLatest"
+                android:visibility="gone">
+
+                <RadioButton
+                    android:id="@+id/rbSortLatest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="6dp"
+                    android:text="최신순"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:button="@null"
+                    android:background="@drawable/bg_item_list_tap_selector"
+                    android:textColor="@drawable/bg_item_list_text_selector"
+                    android:checked="true" />
+
+                <RadioButton
+                    android:id="@+id/rbSortPriceAsc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="6dp"
+                    android:text="가격 낮은 순"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:button="@null"
+                    android:background="@drawable/bg_item_list_tap_selector"
+                    android:textColor="@drawable/bg_item_list_text_selector" />
+
+                <RadioButton
+                    android:id="@+id/rbSortPriceDec"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="가격 높은 순"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:button="@null"
+                    android:background="@drawable/bg_item_list_tap_selector"
+                    android:textColor="@drawable/bg_item_list_text_selector" />
+
+            </RadioGroup>
+
         </LinearLayout>
 
         <!-- ── 필터 탭 (RadioGroup 스타일) ── -->

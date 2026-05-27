@@ -24,6 +24,7 @@ import com.pbl.grandmarket_android.data.model.UserRole
 import com.pbl.grandmarket_android.ui.adapter.SaleStatus
 import com.pbl.grandmarket_android.ui.adapter.SalesAdapter
 import com.pbl.grandmarket_android.view_model.SalesListViewModel
+import com.pbl.grandmarket_android.view_model.SortOrder
 import com.pbl.grandmarket_android.databinding.FragmentSellListBinding
 
 class SellListFragment: Fragment() {
@@ -68,6 +69,7 @@ class SellListFragment: Fragment() {
         setupRecyclerView()
         setupFilterTabs()
         setupBuyerSearch()
+        setupSortOrder()
         setupFab()
         observeViewModel()
     }
@@ -110,7 +112,6 @@ class SellListFragment: Fragment() {
             return
         }
 
-        // 구매자에게만 판매 목록 검색 버튼을 보여주고, 홈에서 넘어온 검색어가 있으면 먼저 적용합니다.
         binding.btnBuyerSearchInList.visibility = View.VISIBLE
         updateBuyerSearchButtonText()
         viewModel.filterByKeyword(buyerSearchKeyword)
@@ -139,7 +140,6 @@ class SellListFragment: Fragment() {
     }
 
     private fun updateBuyerSearchButtonText() {
-        // 현재 적용 중인 검색어를 버튼에 표시해 구매자가 필터 상태를 바로 알 수 있게 합니다.
         binding.btnBuyerSearchInList.text = if (buyerSearchKeyword.isBlank()) {
             "검색"
         } else {
@@ -147,6 +147,23 @@ class SellListFragment: Fragment() {
         }
     }
 
+
+    // 구매자 전용 정렬 버튼 설정
+    private fun setupSortOrder() {
+        if (isSellerUser) {
+            binding.rgSortOrder.visibility = View.GONE
+            return
+        }
+        binding.rgSortOrder.visibility = View.VISIBLE
+        binding.rgSortOrder.setOnCheckedChangeListener { _: RadioGroup, checkedId: Int ->
+            val order = when (checkedId) {
+                R.id.rbSortPriceAsc -> SortOrder.PRICE_ASC
+                R.id.rbSortPriceDec -> SortOrder.PRICE_DESC
+                else                -> SortOrder.LATEST
+            }
+            viewModel.sortBy(order)
+        }
+    }
 
     private fun setupFab() {
         if (!isSellerUser) {
@@ -156,7 +173,10 @@ class SellListFragment: Fragment() {
         }
 
         binding.fabAddProduct.setOnClickListener {
-            RegisterItemBottomSheet().show(childFragmentManager, "RegisterItemBottomSheet")
+            // 등록 완료 콜백을 연결하여 BottomSheet dismiss 즉시 목록 갱신
+            RegisterItemBottomSheet()
+                .setOnRegisteredListener { viewModel.loadSalesList() }
+                .show(childFragmentManager, "RegisterItemBottomSheet")
         }
     }
 
@@ -248,7 +268,6 @@ class SellListFragment: Fragment() {
         private const val ARG_BUYER_SEARCH_KEYWORD = "arg_buyer_search_keyword"
 
         fun newInstance(searchKeyword: String): SellListFragment {
-            // 구매자 홈 검색창에서 입력한 식자재명을 판매 목록 Fragment 인자로 전달합니다.
             return SellListFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_BUYER_SEARCH_KEYWORD, searchKeyword)
