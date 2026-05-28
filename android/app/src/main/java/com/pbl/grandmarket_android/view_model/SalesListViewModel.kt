@@ -133,7 +133,8 @@ class SalesListViewModel : ViewModel() {
             imageUrl = null,
             stockCount = 0,
             status = item.status.toSaleStatus(),
-            createdAt = item.timestamp
+            createdAt = item.timestamp,
+            sellerName = item.sellerName
         )
     }
 

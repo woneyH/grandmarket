@@ -13,7 +13,8 @@ data class SellerFoodItem(
     val price: Long,
     val category: String,
     val status: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val sellerName: String
 )
 
 class FoodRepository {
@@ -123,7 +124,8 @@ class FoodRepository {
                             price = food.price,
                             category = food.category,
                             status = food.status,
-                            timestamp = food.timestamp
+                            timestamp = food.timestamp,
+                            sellerName = food.sellerName
                         )
                     }.sortedByDescending { it.timestamp }
                     onResult(true, items, null)
@@ -254,7 +256,8 @@ class FoodRepository {
                                 price = food.price,
                                 category = food.category,
                                 status = food.status,
-                                timestamp = food.timestamp
+                                timestamp = food.timestamp,
+                                sellerName = food.sellerName
                             )
                         }.sortedByDescending { it.timestamp }
 
