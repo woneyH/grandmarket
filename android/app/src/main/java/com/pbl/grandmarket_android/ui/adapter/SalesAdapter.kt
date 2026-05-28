@@ -20,7 +20,8 @@ data class SaleItem(
     val imageUrl: String?,
     val stockCount: Int,
     val status: SaleStatus,
-    val createdAt: Long
+    val createdAt: Long,
+    val sellerName: String = ""
 )
 
 enum class ProductCategory {
@@ -88,6 +89,13 @@ class SalesAdapter(
             //     .load(item.imageUrl)
             //     .placeholder(R.drawable.ic_image_placeholder)
             //     .into(binding.ivProductImage)
+
+            if (!isEditable && item.sellerName.isNotBlank()) {
+                binding.tvSellerName.visibility = View.VISIBLE
+                binding.tvSellerName.text = item.sellerName
+            } else {
+                binding.tvSellerName.visibility = View.GONE
+            }
 
             binding.root.setOnClickListener { onItemClick(item) }
             binding.layoutActionButtons.visibility = if (isEditable) View.VISIBLE else View.GONE

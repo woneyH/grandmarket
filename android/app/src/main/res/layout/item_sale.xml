@@ -122,6 +122,17 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tvSellerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:drawablePadding="3dp"
+                android:text="판매자"
+                android:textSize="12sp"
+                android:textColor="#8A8A7A"
+                android:visibility="gone" />
+
         </LinearLayout>
 
         <LinearLayout

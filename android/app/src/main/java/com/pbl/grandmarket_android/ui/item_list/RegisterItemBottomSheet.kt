@@ -24,6 +24,12 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
     private lateinit var api: ApiProductService
     private var currentWholesalePrice = 0L // 불러온 도매가 저장용
     private var initialItemName: String? = null // AI 인식 결과로 전달된 기본 식자재명
+    private var onRegisteredListener: (() -> Unit)? = null
+
+    fun setOnRegisteredListener(listener: () -> Unit): RegisterItemBottomSheet {
+        onRegisteredListener = listener
+        return this
+    }
 
     companion object {
         private const val ARG_ITEM_NAME = "arg_item_name"
@@ -141,6 +147,8 @@ class RegisterItemBottomSheet : BottomSheetDialogFragment() {
 
                     if (isSuccess) {
                         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                        // 등록 성공 시 콜백 실행 후 닫기 → SellListFragment가 목록을 즉시 갱신
+                        onRegisteredListener?.invoke()
                         dismiss()
                     } else {
                         Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
