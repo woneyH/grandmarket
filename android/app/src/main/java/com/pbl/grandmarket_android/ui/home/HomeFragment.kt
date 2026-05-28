@@ -198,7 +198,7 @@ class HomeFragment : Fragment() {
                     // 점포가 등록된 사용자만 식자재 등록 BottomSheet를 띄움
                     foodRepository.checkStoreExists { isExists, message ->
                         if (isExists) {
-                            showRegisterBottomSheet(topResult.className)
+                            showRegisterBottomSheet(topResult.className, photoUri)
                         } else {
                             Toast.makeText(requireContext(), message ?: "점포를 먼저 등록해주세요.", Toast.LENGTH_SHORT).show()
                         }
@@ -210,9 +210,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showRegisterBottomSheet(initialItemName: String? = null) {
-        // AI 인식 결과가 있으면 기본 검색어로 전달
-        val bottomSheet = RegisterItemBottomSheet.newInstance(initialItemName)
+    private fun showRegisterBottomSheet(initialItemName: String? = null, capturedPhotoUri: Uri? = null) {
+        val bottomSheet = RegisterItemBottomSheet.newInstance(initialItemName, capturedPhotoUri?.toString())
         bottomSheet.show(childFragmentManager, "RegisterItemBottomSheet")
     }
 

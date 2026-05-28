@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.pbl.grandmarket_android.R
 import com.pbl.grandmarket_android.databinding.ItemSaleBinding
 
 // 데이터 클래스
@@ -84,11 +86,15 @@ class SalesAdapter(
             binding.tvStatus.text = statusText
             binding.tvStatus.setTextColor(Color.parseColor(statusTextColor))
 
-            // TODO: Glide / Coil 이미지 로드
-            // Glide.with(binding.root)
-            //     .load(item.imageUrl)
-            //     .placeholder(R.drawable.ic_image_placeholder)
-            //     .into(binding.ivProductImage)
+            if (!item.imageUrl.isNullOrBlank()) {
+                binding.ivProductImage.load(item.imageUrl) {
+                    crossfade(true)
+                    placeholder(R.drawable.item_list_image_placeholder)
+                    error(R.drawable.item_list_image_placeholder)
+                }
+            } else {
+                binding.ivProductImage.setImageResource(R.drawable.item_list_image_placeholder)
+            }
 
             if (!isEditable && item.sellerName.isNotBlank()) {
                 binding.tvSellerName.visibility = View.VISIBLE

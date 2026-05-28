@@ -130,7 +130,7 @@ class SalesListViewModel : ViewModel() {
             title = item.foodName,
             price = item.price.toInt(),
             category = item.category.toProductCategory(),
-            imageUrl = null,
+            imageUrl = item.imageUrl.ifBlank { null },
             stockCount = 0,
             status = item.status.toSaleStatus(),
             createdAt = item.timestamp,
