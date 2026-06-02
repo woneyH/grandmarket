@@ -12,7 +12,8 @@ import com.pbl.grandmarket_android.data.model.StoreItem
 import com.pbl.grandmarket_android.ui.adapter.StoreListAdapter
 
 class StoreListBottomSheetFragment(
-    private val sortedStores: List<StoreItem>
+    private val sortedStores: List<StoreItem>,
+    private val onStoreClick: (StoreItem) -> Unit = {}
 ) : BottomSheetDialogFragment() {
 
     override fun onCreateView(
@@ -26,6 +27,7 @@ class StoreListBottomSheetFragment(
 
         val adapter = StoreListAdapter(sortedStores) { clickedStore ->
             dismiss()
+            onStoreClick(clickedStore)
         }
         recyclerView.adapter = adapter
 

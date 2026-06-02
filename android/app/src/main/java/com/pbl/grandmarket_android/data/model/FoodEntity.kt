@@ -8,5 +8,6 @@ data class FoodEntity (
     val marketPrice: Long = 0L, //해당 식자재 평균 시세
     val category: String = "",  //식자재 카테고리
     val status: String = "판매중", //판매 상황
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    val imageUrl: String = "" // Firebase Storage에 업로드된 상품 이미지 URL
 )
