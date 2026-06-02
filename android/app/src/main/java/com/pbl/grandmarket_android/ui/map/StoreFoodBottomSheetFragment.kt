@@ -85,7 +85,7 @@ class StoreFoodBottomSheetFragment(
                         title = food.foodName,
                         price = food.price.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt(),
                         category = food.category.toProductCategory(),
-                        imageUrl = null,
+                        imageUrl = food.imageUrl,
                         stockCount = 0,
                         status = food.status.toSaleStatus(),
                         createdAt = food.timestamp
