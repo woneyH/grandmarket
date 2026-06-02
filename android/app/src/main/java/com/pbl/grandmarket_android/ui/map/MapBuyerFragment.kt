@@ -106,7 +106,9 @@ class MapBuyerFragment : Fragment() {
                 Toast.makeText(requireContext(), "주변 반경 15km 내에 점포가 없습니다.", Toast.LENGTH_SHORT)
                     .show()
             } else {
-                val bottomSheet = StoreListBottomSheetFragment(storeList)
+                val bottomSheet = StoreListBottomSheetFragment(storeList) { clickedStore ->
+                    showStoreFoodBottomSheet(clickedStore)
+                }
                 bottomSheet.show(parentFragmentManager, "StoreListBottomSheet")
             }
         }
@@ -203,11 +205,14 @@ class MapBuyerFragment : Fragment() {
     private fun setupStoreMarkerClickListener() {
         kakaoMap?.setOnLabelClickListener { _, _, label: Label ->
             val store = label.tag as? StoreItem ?: return@setOnLabelClickListener false
-            StoreFoodBottomSheetFragment(store) { clickedStore ->
-                openKakaoMapRoute(clickedStore)
-            }.show(parentFragmentManager, "StoreFoodBottomSheet")
+            showStoreFoodBottomSheet(store)
             true
         }
+    }
+    private fun showStoreFoodBottomSheet(store: StoreItem) {
+        StoreFoodBottomSheetFragment(store) { clickedStore ->
+            openKakaoMapRoute(clickedStore)
+        }.show(parentFragmentManager, "StoreFoodBottomSheet")
     }
 
     // 카카오맵 앱 길찾기 열고, 앱이 없으면 웹 카카오맵 링크로 연결
