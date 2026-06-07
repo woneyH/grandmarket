@@ -52,8 +52,12 @@ class MapBuyerFragment : Fragment() {
     // 검색 반경 15km (15,000m)
     private val SEARCH_RADIUS = 15000f
 
+    private val HOT_STORE_COUNT = 3
+
     // 현재 반경 내 점포 리스트
     private val storeList = mutableListOf<StoreItem>()
+
+    private val hotStoreIds = mutableSetOf<String>()
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
@@ -164,23 +168,35 @@ class MapBuyerFragment : Fragment() {
 
                 // 기존 마커 모두 초기화
                 storeLayer?.removeAll()
+                hotStoreIds.clear()
 
                 for (document in documents) {
                     val lat = document.getDouble("latitude") ?: continue
                     val lng = document.getDouble("longitude") ?: continue
                     val nickname = document.getString("nickname") ?: "이름 없음"
                     val address = document.getString("address") ?: ""
+                    val viewCount = document.getLong("viewCount")?.toInt() ?: 0
+                    val profileImageUrl = document.getString("profileImageUrl")
 
                     val distance = calculateDistance(myLat, myLng, lat, lng)
 
                     // 15km 이내만 필터링
                     if (distance <= SEARCH_RADIUS) {
-                        // 마커 클릭 시 판매자 식자재 조회에 사용할 점포 정보를 마커 tag에 연결
-                        val storeItem = StoreItem(document.id, nickname, address, lat, lng, distance)
+                        val storeItem = StoreItem(
+                            document.id, nickname, address, lat, lng, distance, viewCount, profileImageUrl
+                        )
                         storeList.add(storeItem)
-
-                        addStoreMarkerOnMap(storeLayer, storeItem)
                     }
+                }
+
+                storeList
+                    .filter { it.viewCount > 0 }
+                    .sortedByDescending { it.viewCount }
+                    .take(HOT_STORE_COUNT)
+                    .forEach { hotStoreIds.add(it.storeId) }
+
+                for (store in storeList) {
+                    addStoreMarkerOnMap(storeLayer, store, hotStoreIds.contains(store.storeId))
                 }
 
                 // 가까운 순으로 정렬
@@ -188,6 +204,8 @@ class MapBuyerFragment : Fragment() {
 
                 // 버튼 텍스트 업데이트
                 binding.btnShowStoreList.text = "주변 점포 ${storeList.size}개 보기"
+
+                showHotStoreEvent()
 
                 if (storeList.isNotEmpty()) {
                     Log.d(
@@ -209,6 +227,18 @@ class MapBuyerFragment : Fragment() {
             true
         }
     }
+    private fun showHotStoreEvent() {
+        val topStore = storeList
+            .filter { it.viewCount > 0 }
+            .maxByOrNull { it.viewCount } ?: return
+
+        Toast.makeText(
+            requireContext(),
+            "🔥 오늘의 인기 점포: ${topStore.storeName} (조회 ${topStore.viewCount}회)",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
     private fun showStoreFoodBottomSheet(store: StoreItem) {
         StoreFoodBottomSheetFragment(store) { clickedStore ->
             openKakaoMapRoute(clickedStore)
@@ -232,17 +262,29 @@ class MapBuyerFragment : Fragment() {
 
     private fun addStoreMarkerOnMap(
         layer: LabelLayer?,
-        store: StoreItem
+        store: StoreItem,
+        isHot: Boolean = false
     ) {
         try {
             val labelManager = kakaoMap?.labelManager ?: return
 
-            val labelText = LabelTextBuilder().setTexts(store.storeName)
+            val labelText = if (isHot) {
+                LabelTextBuilder().setTexts("🔥 ${store.storeName} (${store.viewCount})")
+            } else {
+                LabelTextBuilder().setTexts(store.storeName)
+            }
 
-            val style = LabelStyles.from(
-                LabelStyle.from(R.drawable.store_marker)
-                    .setTextStyles(21, ContextCompat.getColor(requireContext(), R.color.black))
-            )
+            val style = if (isHot) {
+                LabelStyles.from(
+                    LabelStyle.from(R.drawable.store_marker)
+                        .setTextStyles(23, ContextCompat.getColor(requireContext(), R.color.hot_store_text))
+                )
+            } else {
+                LabelStyles.from(
+                    LabelStyle.from(R.drawable.store_marker)
+                        .setTextStyles(21, ContextCompat.getColor(requireContext(), R.color.black))
+                )
+            }
 
             val registeredStyle = labelManager.addLabelStyles(style)
 
