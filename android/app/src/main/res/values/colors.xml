@@ -23,4 +23,5 @@
     <color name="home_item_container">#FFFDF7</color>
 
     <color name="home_search_bar_text">#FCFCFC</color>
+    <color name="hot_store_text">#E0241B</color>
 </resources>
