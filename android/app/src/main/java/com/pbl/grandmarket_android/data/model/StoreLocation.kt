@@ -7,5 +7,6 @@ data class StoreLocation (
     val longitude: Double? = null,
     val address: String? = null,
     val viewCount: Int? = null,
+    val profileImageUrl: String? = null,
     val timestamp: Long = System.currentTimeMillis()
 )

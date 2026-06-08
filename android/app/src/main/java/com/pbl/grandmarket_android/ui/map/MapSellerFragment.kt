@@ -249,6 +249,9 @@ class MapSellerFragment : Fragment() {
                 if (user != null) {
                     val kakaoId = user.id
                     val nickname = user.kakaoAccount?.profile?.nickname ?: "이름 없음"
+                    val profileImageUrl = user.kakaoAccount?.profile?.let {
+                        it.thumbnailImageUrl ?: it.profileImageUrl
+                    }
 
                     //지도의 중앙 좌표값
                     val centerPos = kakaoMap?.cameraPosition?.position
@@ -262,7 +265,8 @@ class MapSellerFragment : Fragment() {
                         latitude = lat,
                         longitude = lng,
                         viewCount = 0,
-                        address = address
+                        address = address,
+                        profileImageUrl = profileImageUrl
                     )
 
                     FirebaseFirestore.getInstance().collection("storeLocation")

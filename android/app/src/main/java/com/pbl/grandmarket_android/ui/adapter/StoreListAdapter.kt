@@ -3,8 +3,11 @@ package com.pbl.grandmarket_android.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.pbl.grandmarket_android.R
 import com.pbl.grandmarket_android.data.model.StoreItem
 
@@ -17,12 +20,27 @@ class StoreListAdapter(
         val tvStoreName: TextView = itemView.findViewById(R.id.tv_store_name)
         val tvStoreAddress: TextView = itemView.findViewById(R.id.tv_store_address)
         val tvStoreDistance: TextView = itemView.findViewById(R.id.tv_store_distance)
+        val tvStoreViewCount: TextView = itemView.findViewById(R.id.tv_store_view_count)
+        val ivStoreIcon: ImageView = itemView.findViewById(R.id.iv_store_icon)
 
         fun bind(store: StoreItem) {
             tvStoreName.text = store.storeName
             tvStoreAddress.text = store.address
 
             tvStoreDistance.text = store.getFormattedDistance()
+
+            tvStoreViewCount.text = "👁 ${store.viewCount}"
+
+            if (!store.profileImageUrl.isNullOrBlank()) {
+                ivStoreIcon.load(store.profileImageUrl) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                    placeholder(R.drawable.bg_map_icon_circle_orange)
+                    error(R.drawable.bg_map_icon_circle_orange)
+                }
+            } else {
+                ivStoreIcon.setImageResource(R.drawable.bg_map_icon_circle_orange)
+            }
 
             itemView.setOnClickListener {
                 onItemClick(store)

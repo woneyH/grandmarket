@@ -6,7 +6,9 @@ data class StoreItem(
     val address: String,
     val latitude: Double,
     val longitude: Double,
-    var distanceToMe: Float = 0f // 미터(m) 단위 거리
+    var distanceToMe: Float = 0f, // 미터(m) 단위 거리
+    val viewCount: Int = 0,
+    val profileImageUrl: String? = null
 ) {
     fun getFormattedDistance(): String {
         return if (distanceToMe >= 1000) {
